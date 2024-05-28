@@ -1,12 +1,9 @@
 package ru.alphadrow.gb.mynotes;
 
-import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+
+import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,5 +11,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(savedInstanceState==null){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.notesContainer, NotesFragment.newInstance())
+                    .commit();
+        }
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Fragment backStackFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.notesContainer);
+        if(backStackFragment instanceof NotePropertiesFragment){
+            onBackPressed();
+        }
     }
 }
