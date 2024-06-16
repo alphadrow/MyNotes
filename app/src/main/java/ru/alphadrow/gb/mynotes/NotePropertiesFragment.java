@@ -77,6 +77,7 @@ public class NotePropertiesFragment extends Fragment {
                 .getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.notePropertiesContainer, NoteDatePickerFragment.newInstance(note))
+                .addToBackStack("")
                 .commit();
     }
 }

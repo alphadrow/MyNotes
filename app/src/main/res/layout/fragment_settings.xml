@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?actionBarSize"
+    android:orientation="vertical">
+<!--Есть ли какая-то другая возможность не использовать всё время
+    android:paddingTop="?actionBarSize" ?  типа разместить элементы
+    в LinearLayout? или с include такой фокус не проходит?-->
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonModeOne"
+            android:text="@string/mode_one">
+
+        </RadioButton>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonModeTwo"
+            android:text="@string/mode_two">
+
+        </RadioButton>
+    </RadioGroup>
+</LinearLayout>

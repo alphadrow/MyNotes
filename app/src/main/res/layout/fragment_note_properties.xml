@@ -2,32 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="top"
+    android:paddingTop="?actionBarSize"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/nameTextView"
-        android:textSize="@dimen/text_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/descriptionTextView"
-        android:textSize="@dimen/text_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/timeAndDateTextView"
-        android:textSize="@dimen/text_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/importanceTextView"
-        android:textSize="@dimen/text_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size" />
 
 
 </LinearLayout>

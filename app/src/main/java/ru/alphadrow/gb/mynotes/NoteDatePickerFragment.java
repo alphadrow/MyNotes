@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class NoteDatePickerFragment extends Fragment {
 
@@ -23,32 +25,37 @@ public class NoteDatePickerFragment extends Fragment {
     public static NoteDatePickerFragment newInstance(Note note){
         NoteDatePickerFragment fragment=  new NoteDatePickerFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.ARG_NOTE, note);
+        bundle.putParcelable(Settings.ARG_NOTE, note);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
-    public void onCreate( Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         if(savedInstanceState!=null) {
-            this.currentNote = savedInstanceState.getParcelable(Constants.KEY_NOTE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                datePicker.updateDate(currentNote.getDateOfCreation().getYear(),
-                        currentNote.getDateOfCreation().getMonthValue(),
-                        currentNote.getDateOfCreation().getDayOfMonth());
-            }
+            this.currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
+            datePicker.updateDate(currentNote.getDateOfCreation().getYear(),
+                    currentNote.getDateOfCreation().getMonth(),
+                    currentNote.getDateOfCreation().getDay());
         }
         isLandScape = getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE;
         if(getArguments()!=null){
-            this.currentNote = getArguments().getParcelable(Constants.ARG_NOTE);
+            this.currentNote = getArguments().getParcelable(Settings.ARG_NOTE);
         }
+    }
+
+
+    @Override
+    public void onCreate( Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(Constants.KEY_NOTE, currentNote);
-        outState.putParcelable(Constants.KEY_DB, myDataBase);
+        outState.putParcelable(Settings.KEY_NOTE, currentNote);
+        outState.putParcelable(Settings.KEY_DB, myDataBase);
         super.onSaveInstanceState(outState);
     }
     @Override
@@ -61,7 +68,7 @@ public class NoteDatePickerFragment extends Fragment {
             public void onClick(View v) {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    currentNote.setDateOfCreation(LocalDate.of(
+                    currentNote.setDateOfCreation(new Date(
                             datePicker.getYear(),
                             datePicker.getMonth() + 1,
                             datePicker.getDayOfMonth()));
