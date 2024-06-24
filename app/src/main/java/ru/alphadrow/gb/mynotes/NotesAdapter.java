@@ -1,5 +1,6 @@
 package ru.alphadrow.gb.mynotes;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +30,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.name.setText(dataSource[position]);
+        holder.onBind(dataSource[position]);
+        Log.d("aa","aa");
     }
 
 
@@ -46,10 +47,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView name;
+        private TextView name;
         public MyViewHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.textView);
+            name = itemView.findViewById(R.id.noteNameTv);
 
             name.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -57,6 +58,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
                     listener.onMyClick(v, getAdapterPosition());
                 }
             });
+        }
+        public void onBind(String noteName) {
+            name.setText(noteName);
         }
     }
 }

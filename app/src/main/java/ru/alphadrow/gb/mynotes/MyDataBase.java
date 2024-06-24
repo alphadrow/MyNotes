@@ -59,6 +59,14 @@ public class MyDataBase implements Parcelable {
             noteList.add(new Note("Захватить мир", "Что может быть проще?", new Date(2000, 3, 3), Importance.MEDIUM));
             noteList.add(new Note("Сбежать от санитаров", "Это уже сложнее...", new Date(2000, 4, 4), Importance.HIGH));
             noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
 
     }
 
