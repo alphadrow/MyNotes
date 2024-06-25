@@ -5,5 +5,8 @@ public enum Importance {
     LOW,
     MEDIUM,
     HIGH,
-    LIFE_AND_DEATH
+    LIFE_AND_DEATH,
+
+    UNKNOWN
+
 }

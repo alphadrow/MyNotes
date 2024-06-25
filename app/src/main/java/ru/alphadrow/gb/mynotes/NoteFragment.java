@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class NotesFragment extends Fragment implements MyOnClickListener{
+public class NoteFragment extends Fragment implements MyOnClickListener{
 
      Note currentNote;
 
@@ -19,8 +21,8 @@ public class NotesFragment extends Fragment implements MyOnClickListener{
      MyDataBase myDataBase;
 
 
-    public static NotesFragment newInstance(){
-        return new NotesFragment();
+    public static NoteFragment newInstance(){
+        return new NoteFragment();
     }
 
 
@@ -33,7 +35,7 @@ public class NotesFragment extends Fragment implements MyOnClickListener{
             currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
             myDataBase = savedInstanceState.getParcelable(Settings.KEY_DB);
         }
-//        if(isLandScape)
+        if(isLandScape)
             if(currentNote !=null){
                 showNoteProperties(currentNote);
             }else{
@@ -51,15 +53,21 @@ public class NotesFragment extends Fragment implements MyOnClickListener{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_card_view,container,false);
+        View view = inflater.inflate(R.layout.fragment_notes,container,false);
+        return view;
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        NotesAdapter notesAdapter = new NotesAdapter(getTextViewArray());
-        notesAdapter.setOnMyOnClickListener(this);
-        recyclerView.setAdapter(notesAdapter);
-        return view;
+        NoteAdapter noteAdapter = new NoteAdapter(getTextViewArray());
+        noteAdapter.setOnMyOnClickListener(this);
+        recyclerView.setAdapter(noteAdapter);
     }
 
     private String[] getTextViewArray() {

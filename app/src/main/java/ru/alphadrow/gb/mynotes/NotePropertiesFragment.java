@@ -2,15 +2,16 @@ package ru.alphadrow.gb.mynotes;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.TextView;
 
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class NotePropertiesFragment extends Fragment implements MyOnClickListener {
 
@@ -37,29 +38,8 @@ public class NotePropertiesFragment extends Fragment implements MyOnClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_card_view, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        NotesPropertiesAdapter adapter = new NotesPropertiesAdapter(MyDataBase.getInstance());
-        adapter.setOnMyOnClickListener(this);
-        recyclerView.setAdapter(adapter);
+        View view = inflater.inflate(R.layout.fragment_note_properties, container, false);
 
-
-//        ListView listView = view.findViewById(R.id.)
-//        NotesPropertiesAdapter adapter = new NotesPropertiesAdapter(MyDataBase.getInstance());
-//        TextView textView = view.findViewById(R.id.name);
-//        TextView description = view.findViewById(R.id.description);
-//        TextView dateOfCreate = view.findViewById(R.id.dateOfCreation);
-//        dateOfCreate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showDatePicker(currentNote);
-//            }
-//        });
-//        TextView importance = view.findViewById(R.id.importance);
-//        textView.setText(this.currentNote.getName());
-//        description.setText(this.currentNote.getDescription());
-//        dateOfCreate.setText(this.currentNote.getDateOfCreation().toString());
-//        importance.setText(this.currentNote.getImportance().toString());
 
         return view;
     }
@@ -71,6 +51,39 @@ public class NotePropertiesFragment extends Fragment implements MyOnClickListene
         } else {
             showDatePickerPort(currentNote);
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        TextView textView = view.findViewById(R.id.nameTextView);
+        Button buttonEdit = view.findViewById(R.id.editButton);
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.notesContainer, NotePropertiesFragmentEdit.newInstance(currentNote))
+                        .addToBackStack("")
+                        .commit();
+            }
+        });
+        TextView description = view.findViewById(R.id.descriptionTextView);
+        TextView dateOfCreate = view.findViewById(R.id.timeAndDateTextView);
+        dateOfCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
+        TextView importance = view.findViewById(R.id.importanceTextView);
+        textView.setText(this.currentNote.getName());
+        description.setText(this.currentNote.getDescription());
+        dateOfCreate.setText(this.currentNote.getDateOfCreation().toString());
+        importance.setText(this.currentNote.getImportance().toString());
     }
 
     private void showDatePickerPort(Note note) {

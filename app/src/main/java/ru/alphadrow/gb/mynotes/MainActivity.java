@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
             showFragment(AboutFragment.newInstance());
         }
         if (item.getItemId() == R.id.action_settings) {
-            showFragment((SettingsFragment.newInstance()));
+            showFragment(SettingsFragment.newInstance());
+        }
+        if (item.getItemId() == R.id.action_main) {
+            showFragment(NoteFragment.newInstance());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -54,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.notesContainer, NotesFragment.newInstance())
+                    .replace(R.id.notesContainer, NoteFragment.newInstance())
                     .commit();
         }
 
@@ -85,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.action_settings) {
                     showFragment((SettingsFragment.newInstance()));
                 }
+                if (item.getItemId() == R.id.action_main) {
+                    showFragment(NoteFragment.newInstance());
+                }
+                drawerLayout.close();
                 return false;
             }
         });

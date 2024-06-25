@@ -34,4 +34,8 @@
     <string name="interstitial_ad_unit_id">YOUR_INTERSTITIAL_AD_UNIT_ID</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="about_note">Приложение для ведения заметок. Никакие права не защищены :)</string>
+    <string name="importanceRGName">Importance</string>
+    <string name="apply">APPLY</string>
+    <string name="main">main</string>
+    <string name="edit">EDIT</string>
 </resources>

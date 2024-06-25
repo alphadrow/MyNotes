@@ -6,4 +6,9 @@
     <dimen name="fragment_horizontal_margin">16dp</dimen>
     <dimen name="fragment_vertical_margin">16dp</dimen>
     <dimen name="textSizeDescription">15sp</dimen>
+    <dimen name="cardHeight">200dp</dimen>
+    <dimen name="cardMargin">8dp</dimen>
+    <dimen name="cardElevation">10dp</dimen>
+    <dimen name="cardCornerRadius">8dp</dimen>
+    <dimen name="noteMarginStart">8dp</dimen>
 </resources>
