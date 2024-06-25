@@ -67,12 +67,12 @@ public class NoteDatePickerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
                     currentNote.setDateOfCreation(new Date(
                             datePicker.getYear(),
                             datePicker.getMonth() + 1,
                             datePicker.getDayOfMonth()));
-                }
+
             }
         });
         return view;
