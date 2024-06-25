@@ -1,12 +1,10 @@
 package ru.alphadrow.gb.mynotes;
 
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MyDataBase implements Parcelable {
@@ -51,26 +49,26 @@ public class MyDataBase implements Parcelable {
 
 
     private static void setList() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            noteList.add(new Note("Вынести мусор", "Выносить мусор нужно каждый день.", LocalDate.of(1999, 1, 1), Importance.LIFE_AND_DEATH));
-            noteList.add(new Note("Убить Билла", "Bill must die", LocalDate.of(2000, 2, 2), Importance.LOW));
-            noteList.add(new Note("Захватить мир", "Что может быть проще?", LocalDate.of(2001, 3, 3), Importance.MEDIUM));
-            noteList.add(new Note("Сбежать от санитаров", "Это уже сложнее...", LocalDate.of(1998, 4, 4), Importance.HIGH));
-            noteList.add(new Note("Забыл", "Кто здесь?!", LocalDate.of(1997, 5, 5), Importance.FORGET_ABOUT_IT));
-        }
+
+        noteList.add(new Note("Вынести мусор", "Выносить мусор нужно каждый день.", new Date(1999, 1, 1), Importance.LIFE_AND_DEATH));
+            noteList.add(new Note("Убить Билла", "Bill must die", new Date(2000, 2, 2), Importance.LOW));
+            noteList.add(new Note("Захватить мир", "Что может быть проще?", new Date(2000, 3, 3), Importance.MEDIUM));
+            noteList.add(new Note("Сбежать от санитаров", "Это уже сложнее...", new Date(2000, 4, 4), Importance.HIGH));
+            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+
     }
 
     public List<Note> getNoteList() {
         return noteList;
     }
 
-    public void put(Note note){
+    public void putNote(Note note){
         noteList.add(note);
     }
 
 
 
-    public Note get(int i){
+    public Note getNote(int i){
         return noteList.get(i);
     }
 }

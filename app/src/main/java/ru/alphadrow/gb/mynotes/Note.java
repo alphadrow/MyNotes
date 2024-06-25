@@ -5,18 +5,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Note implements Parcelable{
     private String name;
     private String description;
-    private LocalDate dateOfCreation;
+    private Date dateOfCreation;
     private Importance importance;
 
 
 
 
 
-    public Note(String name, String description, LocalDate dateOfCreation, Importance importance) {
+    public Note(String name, String description, Date dateOfCreation, Importance importance) {
         this.name = name;
         this.description = description;
         this.dateOfCreation = dateOfCreation;
@@ -68,11 +70,11 @@ public class Note implements Parcelable{
         this.description = description;
     }
 
-    public LocalDate getDateOfCreation() {
+    public Date getDateOfCreation() {
         return dateOfCreation;
     }
 
-    public void setDateOfCreation(LocalDate dateOfCreation) {
+    public void setDateOfCreation(Date dateOfCreation) {
         this.dateOfCreation = dateOfCreation;
     }
 

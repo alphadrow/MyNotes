@@ -29,22 +29,22 @@ public class NotesFragment extends Fragment {
         isLandScape = getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE;
         myDataBase = MyDataBase.getInstance();
         if(savedInstanceState!=null){
-            currentNote = savedInstanceState.getParcelable(Constants.KEY_NOTE);
-            myDataBase = savedInstanceState.getParcelable(Constants.KEY_DB);
+            currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
+            myDataBase = savedInstanceState.getParcelable(Settings.KEY_DB);
         }
 //        if(isLandScape)
             if(currentNote !=null){
                 showNoteProperties(currentNote);
             }else{
-                showNoteProperties(myDataBase.get(0));
+                showNoteProperties(myDataBase.getNote(0));
             }
 
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(Constants.KEY_NOTE, currentNote);
-        outState.putParcelable(Constants.KEY_DB, myDataBase);
+        outState.putParcelable(Settings.KEY_NOTE, currentNote);
+        outState.putParcelable(Settings.KEY_DB, myDataBase);
         super.onSaveInstanceState(outState);
     }
 
