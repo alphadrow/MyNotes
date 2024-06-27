@@ -27,6 +27,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     RadioButton highImportanceRB;
     RadioButton lifeAndDeathImportanceRB;
     Button applyButton;
+    Button editButton;
     EditText name;
     EditText description;
     public static String ARG_NOTE = "note";
@@ -72,6 +73,12 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         highImportanceRB.setText(Importance.HIGH.toString());
         lifeAndDeathImportanceRB.setText(Importance.LIFE_AND_DEATH.toString());
         radioGroup.check(getRealRBID(currentNote.getImportance()));
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,11 +135,39 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         mediumImportanceRB = view.findViewById(R.id.mediumImportanceRB);
         highImportanceRB = view.findViewById(R.id.highImportanceRB);
         lifeAndDeathImportanceRB = view.findViewById(R.id.lifeAndDeathImportanceRB);
+        editButton = view.findViewById(R.id.editDate);
     }
 
 
     @Override
     public void onMyClick(View view, int position) {
 
+    }
+
+    protected void showDatePicker() {
+
+        if (isLandScape) {
+            showDatePickerLand(currentNote);
+        } else {
+            showDatePickerPort(currentNote);
+        }
+    }
+
+    private void showDatePickerPort(Note note) {
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.notesContainer, NoteDatePickerFragment.newInstance(note))
+                .addToBackStack("")
+                .commit();
+    }
+
+    private void showDatePickerLand(Note note) {
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.notePropertiesContainer, NoteDatePickerFragment.newInstance(note))
+                .addToBackStack("")
+                .commit();
     }
 }

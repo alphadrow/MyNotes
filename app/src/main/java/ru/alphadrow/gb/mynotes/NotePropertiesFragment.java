@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class NotePropertiesFragment extends Fragment implements MyOnClickListener {
+public class NotePropertiesFragment extends Fragment{
 
     public static String ARG_NOTE = "note";
     Note currentNote;
@@ -44,14 +44,7 @@ public class NotePropertiesFragment extends Fragment implements MyOnClickListene
         return view;
     }
 
-    private void showDatePicker() {
 
-        if (isLandScape) {
-            showDatePickerLand(currentNote);
-        } else {
-            showDatePickerPort(currentNote);
-        }
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -73,12 +66,7 @@ public class NotePropertiesFragment extends Fragment implements MyOnClickListene
         });
         TextView description = view.findViewById(R.id.descriptionTextView);
         TextView dateOfCreate = view.findViewById(R.id.timeAndDateTextView);
-        dateOfCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
-            }
-        });
+
         TextView importance = view.findViewById(R.id.importanceTextView);
         textView.setText(this.currentNote.getName());
         description.setText(this.currentNote.getDescription());
@@ -86,26 +74,5 @@ public class NotePropertiesFragment extends Fragment implements MyOnClickListene
         importance.setText(this.currentNote.getImportance().toString());
     }
 
-    private void showDatePickerPort(Note note) {
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.notesContainer, NoteDatePickerFragment.newInstance(note))
-                .addToBackStack("")
-                .commit();
-    }
 
-    private void showDatePickerLand(Note note) {
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.notePropertiesContainer, NoteDatePickerFragment.newInstance(note))
-                .addToBackStack("")
-                .commit();
-    }
-
-    @Override
-    public void onMyClick(View view, int position) {
-        showDatePicker();
-    }
 }

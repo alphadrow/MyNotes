@@ -3,7 +3,11 @@ package ru.alphadrow.gb.mynotes;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,12 +23,18 @@ public class NoteFragment extends Fragment implements MyOnClickListener{
 
      boolean isLandScape;
      MyDataBase myDataBase;
+    NoteAdapter noteAdapter;
 
 
     public static NoteFragment newInstance(){
         return new NoteFragment();
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.item_menu, menu);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,8 +75,9 @@ public class NoteFragment extends Fragment implements MyOnClickListener{
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        NoteAdapter noteAdapter = new NoteAdapter(getTextViewArray());
+        noteAdapter = new NoteAdapter(this);
         noteAdapter.setOnMyOnClickListener(this);
+        setHasOptionsMenu(true);
         recyclerView.setAdapter(noteAdapter);
     }
 
@@ -114,4 +125,46 @@ public class NoteFragment extends Fragment implements MyOnClickListener{
         showNoteProperties(myDataBase.getNote(position));
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.deleteItem){
+            myDataBase.deleteNote(item.getItemId());
+            noteAdapter.notifyItemChanged(item.getItemId());
+        }
+        if (item.getItemId() == R.id.editItem){
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.notesContainer, NotePropertiesFragmentEdit.newInstance(currentNote))
+                    .addToBackStack("")
+                    .commit();
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int position = noteAdapter.getMenuContextClickPosition();
+        currentNote = myDataBase.getNote(position);
+        if (item.getItemId() == R.id.deleteItem){
+            myDataBase.deleteNote(position);
+            noteAdapter.notifyItemRemoved(position);
+        }
+        if (item.getItemId() == R.id.editItem){
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.notesContainer, NotePropertiesFragmentEdit.newInstance(currentNote))
+                    .addToBackStack("")
+                    .commit();
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        requireActivity().getMenuInflater().inflate(R.menu.item_menu, menu);
+    }
 }
