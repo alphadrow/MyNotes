@@ -27,7 +27,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     buildFeatures {
-        viewBinding = true
     }
 }
 
@@ -39,6 +38,8 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.preference)
     implementation(libs.play.services.ads)
+    implementation(libs.legacy.support.v4)
+    implementation(libs.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

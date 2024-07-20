@@ -1,13 +1,14 @@
 package ru.alphadrow.gb.mynotes;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -16,7 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import ru.alphadrow.gb.mynotes.observe.Publisher;
+
 public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickListener {
+
+    private Publisher publisher;
     Note currentNote;
     boolean isLandScape;
     Importance importance;
@@ -27,9 +35,15 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     RadioButton highImportanceRB;
     RadioButton lifeAndDeathImportanceRB;
     Button applyButton;
+    Button editButton;
     EditText name;
     EditText description;
     public static String ARG_NOTE = "note";
+
+    public static NotePropertiesFragmentEdit newInstance() {
+        NotePropertiesFragmentEdit fragment = new NotePropertiesFragmentEdit();
+        return fragment;
+    }
 
 
     public static NotePropertiesFragmentEdit newInstance(Note note) {
@@ -46,6 +60,11 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (getArguments() != null) {
             this.currentNote = getArguments().getParcelable(ARG_NOTE);
+        } else {
+            this.currentNote = new Note("Name"
+                    , "Description"
+                    , new Date()
+                    , Importance.FORGET_ABOUT_IT);
         }
     }
 
@@ -63,6 +82,32 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         setContent();
     }
 
+
+    // установка обработчика выбора даты
+    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+            currentNote.setDateOfCreation(new Date(
+                    datePicker.getYear(),
+                    datePicker.getMonth(),
+                    datePicker.getDayOfMonth()));
+        }
+    };
+
+    // отображаем диалоговое окно для выбора даты
+    public void setDate(View v) {
+        Calendar date = Calendar.getInstance();
+
+        new DatePickerDialog(requireContext(),
+                d,
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH)
+        )
+                .show();
+    }
+
+
     private void setContent() {
         description.setText(this.currentNote.getDescription());
         name.setText(this.currentNote.getName());
@@ -72,11 +117,19 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         highImportanceRB.setText(Importance.HIGH.toString());
         lifeAndDeathImportanceRB.setText(Importance.LIFE_AND_DEATH.toString());
         radioGroup.check(getRealRBID(currentNote.getImportance()));
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+            }
+        });
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentNote.setName(name.getText().toString());
                 currentNote.setDescription(description.getText().toString());
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
+
             }
         });
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -128,11 +181,36 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         mediumImportanceRB = view.findViewById(R.id.mediumImportanceRB);
         highImportanceRB = view.findViewById(R.id.highImportanceRB);
         lifeAndDeathImportanceRB = view.findViewById(R.id.lifeAndDeathImportanceRB);
+        editButton = view.findViewById(R.id.editDate);
     }
 
 
     @Override
     public void onMyClick(View view, int position) {
 
+    }
+
+    protected void showDatePicker() {
+        setDate(getView());
+
+    }
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        publisher = ((MainActivity) context).getPublisher();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        publisher = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        publisher.notifyTask(currentNote);
     }
 }

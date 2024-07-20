@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MyDataBase implements Parcelable {
+public class MyDataBase implements Parcelable, MyDataBaseInterface {
 
     static MyDataBase myDB = new MyDataBase();
     private static List<Note> noteList = new ArrayList<>();
@@ -62,16 +62,26 @@ public class MyDataBase implements Parcelable {
 
     }
 
+    @Override
+    public void deleteNote(int position) {
+        noteList.remove(position);
+    }
+
+    @Override
+    public void updateNote(int position, Note note) {
+        noteList.set(position, note);
+    }
+
+    @Override
+    public void addNote(Note note) {
+        noteList.add(note);
+    }
+    @Override
     public List<Note> getNoteList() {
         return noteList;
     }
 
-    public void putNote(Note note){
-        noteList.add(note);
-    }
-
-
-
+    @Override
     public Note getNote(int i){
         return noteList.get(i);
     }
