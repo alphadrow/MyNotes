@@ -2,15 +2,18 @@ package ru.alphadrow.gb.mynotes;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class NotesFragment extends Fragment {
+public class NoteFragment extends Fragment implements MyOnClickListener{
 
      Note currentNote;
 
@@ -18,8 +21,8 @@ public class NotesFragment extends Fragment {
      MyDataBase myDataBase;
 
 
-    public static NotesFragment newInstance(){
-        return new NotesFragment();
+    public static NoteFragment newInstance(){
+        return new NoteFragment();
     }
 
 
@@ -32,7 +35,7 @@ public class NotesFragment extends Fragment {
             currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
             myDataBase = savedInstanceState.getParcelable(Settings.KEY_DB);
         }
-//        if(isLandScape)
+        if(isLandScape)
             if(currentNote !=null){
                 showNoteProperties(currentNote);
             }else{
@@ -51,26 +54,37 @@ public class NotesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes,container,false);
-        LinearLayout linearLayout = (LinearLayout) view;
-
-
-
-
-        for(int i =0;i<myDataBase.getNoteList().size();i++){
-            String name = myDataBase.getNoteList().get(i).getName();
-            TextView textView = new TextView(getContext());
-            textView.setText(name);
-            textView.setTextSize(30);
-            linearLayout.addView(textView);
-            int finalI1 = i;
-            textView.setOnClickListener(v -> showNoteProperties(myDataBase.getNoteList().get(finalI1)));
-        }
-
         return view;
     }
 
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+        NoteAdapter noteAdapter = new NoteAdapter(getTextViewArray());
+        noteAdapter.setOnMyOnClickListener(this);
+        recyclerView.setAdapter(noteAdapter);
+    }
+
+    private String[] getTextViewArray() {
+        String[] resultArray = new String[myDataBase.getNoteList().size()];
+        for(int i =0;i<myDataBase.getNoteList().size();i++){
+
+            String name = myDataBase.getNoteList().get(i).getName();
+            resultArray[i] = name;
+        }
+        return  resultArray;
+    }
+
+
     private void showNoteProperties(Note note) {
             currentNote = note;
+        Log.d("myLogs", "currentNote.getName() :" + currentNote.getName());
+
         if (isLandScape) {
             showNotePropertiesLand();
         }else{
@@ -94,4 +108,10 @@ public class NotesFragment extends Fragment {
                 .replace(R.id.notePropertiesContainer, NotePropertiesFragment.newInstance(currentNote))
                 .commit();
     }
+
+    @Override
+    public void onMyClick(View view, int position) {
+        showNoteProperties(myDataBase.getNote(position));
+    }
+
 }

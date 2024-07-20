@@ -16,6 +16,10 @@ public class MyDataBase implements Parcelable {
     public MyDataBase() {
     }
 
+    public int size(){
+        return noteList.size();
+    }
+
     protected MyDataBase(Parcel in) {
     }
 
