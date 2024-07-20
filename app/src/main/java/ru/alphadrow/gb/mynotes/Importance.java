@@ -7,6 +7,5 @@ public enum Importance {
     HIGH,
     LIFE_AND_DEATH,
 
-    UNKNOWN
 
 }

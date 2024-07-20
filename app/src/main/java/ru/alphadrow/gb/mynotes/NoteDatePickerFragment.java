@@ -72,9 +72,11 @@ public class NoteDatePickerFragment extends Fragment {
                             datePicker.getYear(),
                             datePicker.getMonth() + 1,
                             datePicker.getDayOfMonth()));
+                requireActivity().getOnBackPressedDispatcher().onBackPressed();
 
             }
         });
+
         return view;
     }
 

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
     MyDataBase myDataBase = MyDataBase.getInstance();
-    private String[] dataSource;
     private MyOnClickListener listener;
     private MyOnLongClickListener longClickListener;
 
@@ -40,8 +39,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.name.setText(myDataBase.getNote(position).getName());
-        holder.dateOfCreation.setText(myDataBase.getNote(position).getDateOfCreation().toString());
+        holder.setName(myDataBase.getNote(position).getName());
+        holder.setDateOfCreation(myDataBase.getNote(position).getDateOfCreation().toString());
     }
 
 
@@ -56,8 +55,16 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView name;
-        TextView dateOfCreation;
+        public void setName(String name) {
+            this.name.setText(name);
+        }
+
+        public void setDateOfCreation(String dateOfCreation) {
+            this.dateOfCreation.setText(dateOfCreation);
+        }
+
+        private TextView name;
+        private TextView dateOfCreation;
         CardView cardView;
 
         public MyViewHolder(View itemView) {

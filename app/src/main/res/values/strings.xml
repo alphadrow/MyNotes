@@ -42,4 +42,5 @@
     <string name="addItem">Добавить</string>
     <string name="deleteItem">Удалить</string>
     <string name="edit_date">EDIT DATE</string>
+    <string name="floating_button">floatingButton</string>
 </resources>
