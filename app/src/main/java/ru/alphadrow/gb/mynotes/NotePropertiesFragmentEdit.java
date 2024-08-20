@@ -25,6 +25,8 @@ import ru.alphadrow.gb.mynotes.observe.Publisher;
 public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickListener {
 
     private Publisher publisher;
+
+    NotesSource notesSource;
     Note currentNote;
     boolean isLandScape;
     Importance importance;
@@ -61,8 +63,8 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         if (getArguments() != null) {
             this.currentNote = getArguments().getParcelable(ARG_NOTE);
         } else {
-            this.currentNote = new Note("Name"
-                    , "Description"
+            this.currentNote = new Note(""
+                    , ""
                     , new Date()
                     , Importance.FORGET_ABOUT_IT);
         }
@@ -126,8 +128,14 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentNote.setName(name.getText().toString());
-                currentNote.setDescription(description.getText().toString());
+                int index = notesSource.getNoteId(currentNote);
+                currentNote = collectNote();
+                if (index < 0){
+                    notesSource.addNote(currentNote);
+                } else {
+                    notesSource.updateNote(index, currentNote);
+                }
+                publisher.notifyTask(currentNote);
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
 
             }
@@ -136,19 +144,19 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == forgetAboutItImportanceRB.getId()) {
-                    currentNote.setImportance(Importance.FORGET_ABOUT_IT);
+                    importance = (Importance.FORGET_ABOUT_IT);
                 }
                 if (checkedId == lowImportanceRB.getId()) {
-                    currentNote.setImportance(Importance.LOW);
+                    importance = (Importance.LOW);
                 }
                 if (checkedId == mediumImportanceRB.getId()) {
-                    currentNote.setImportance(Importance.MEDIUM);
+                    importance = (Importance.MEDIUM);
                 }
                 if (checkedId == highImportanceRB.getId()) {
-                    currentNote.setImportance(Importance.HIGH);
+                    importance = (Importance.HIGH);
                 }
                 if (checkedId == lifeAndDeathImportanceRB.getId()) {
-                    currentNote.setImportance(Importance.LIFE_AND_DEATH);
+                    importance = (Importance.LIFE_AND_DEATH);
                 }
             }
         });
@@ -182,9 +190,20 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         highImportanceRB = view.findViewById(R.id.highImportanceRB);
         lifeAndDeathImportanceRB = view.findViewById(R.id.lifeAndDeathImportanceRB);
         editButton = view.findViewById(R.id.editDate);
+        notesSource = new MyDataBaseFirebaseImpl();
     }
 
-
+    private Note collectNote() {
+        String name = this.name.getText().toString();
+        String description = this.description.getText().toString();
+        Importance importance = this.importance;
+        if (currentNote != null) {
+            currentNote.setName(name);
+            currentNote.setDescription(description);
+            currentNote.setImportance(importance);
+        }
+        return currentNote;
+    }
     @Override
     public void onMyClick(View view, int position) {
 

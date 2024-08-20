@@ -11,7 +11,22 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
-    MyDataBase myDataBase = MyDataBase.getInstance();
+
+
+    public void setNotesSource(NotesSource notesSource) {
+        this.notesSource = notesSource;
+        notifyDataSetChanged();
+    }
+
+
+    private NotesSource notesSource = new MyDataBaseFirebaseImpl().init(new NotesSourceResponse() {
+
+        @Override
+        public void initialazed(NotesSource notesSource) {
+
+        }
+    });
+
     private MyOnClickListener listener;
     private MyOnLongClickListener longClickListener;
 
@@ -39,15 +54,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.setName(myDataBase.getNote(position).getName());
-        holder.setDateOfCreation(myDataBase.getNote(position).getDateOfCreation().toString());
+        holder.setName(notesSource.getNote(position).getName());
+        holder.setDateOfCreation(notesSource.getNote(position).getDateOfCreation().toString());
     }
 
 
 
     @Override
     public int getItemCount() {
-        return myDataBase.getNoteList().size();
+        return notesSource.size();
     }
 
     public int getMenuContextClickPosition() {
