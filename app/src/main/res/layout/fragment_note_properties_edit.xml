@@ -5,6 +5,16 @@
     android:gravity="top"
     android:orientation="vertical">
 
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<RadioGroup
+    android:id="@+id/importanceRG"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+>
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/nameEditText"
         android:layout_width="match_parent"
@@ -16,22 +26,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size" />
-
     <Button
-        android:id="@+id/applyButton"
-        android:text="@string/apply"
+        android:id="@+id/editDate"
+        android:text="@string/edit_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-<RadioGroup
-    android:id="@+id/importanceRG"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
->
-
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/forgetAboutItImportanceRB"
         android:layout_width="match_parent"
@@ -56,6 +56,12 @@
         android:id="@+id/lifeAndDeathImportanceRB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/applyButton"
+        android:text="@string/apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
 </RadioGroup>
     </ScrollView>
