@@ -1,5 +1,7 @@
 package ru.alphadrow.gb.mynotes;
 
-public interface NotesSourceResponse {
-    void initialazed(NotesSource notesSource);
+import java.util.List;
+
+interface NotesSourceResponse {
+    void initialazed(List<Note> notes);
 }

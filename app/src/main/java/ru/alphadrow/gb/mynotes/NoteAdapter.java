@@ -10,25 +10,25 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
 
 
-    public void setNotesSource(NotesSource notesSource) {
-        this.notesSource = notesSource;
+    public  int sizeOfList() {
+        return notes.size();
+    }
+
+    public void setNotes(List<Note> notesList) {
+        this.notes = notesList;
         notifyDataSetChanged();
     }
 
 
-    private NotesSource notesSource = new MyDataBaseFirebaseImpl().init(new NotesSourceResponse() {
-
-        @Override
-        public void initialazed(NotesSource notesSource) {
-
-        }
-    });
+    private List<Note> notes = new ArrayList<>();
 
     private MyOnClickListener listener;
-    private MyOnLongClickListener longClickListener;
 
     private int menuContextClickPosition;
 
@@ -36,9 +36,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
     public void setOnMyOnClickListener(MyOnClickListener listener){
         this.listener = listener;
     }
-    public void setOnMyOnLongClickListener(MyOnLongClickListener longClickListener){
-        this.longClickListener = longClickListener;
-    }
+
 
     public NoteAdapter(Fragment fragment) {
         this.fragment = fragment;
@@ -52,17 +50,29 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         return new MyViewHolder(view);
     }
 
+    public void removeItemById(int position){
+        notes.remove(position);
+    }
+
+    public void addNote(Note note){
+        notes.add(note);
+    }
+
+
+    public void updateNote(int position, Note note){
+        notes.set(position, note);
+    }
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.setName(notesSource.getNote(position).getName());
-        holder.setDateOfCreation(notesSource.getNote(position).getDateOfCreation().toString());
+        holder.setName(notes.get(position).getName());
+        holder.setDateOfCreation(notes.get(position).getDateOfCreation().toString());
     }
 
 
 
     @Override
     public int getItemCount() {
-        return notesSource.size();
+        return notes.size();
     }
 
     public int getMenuContextClickPosition() {

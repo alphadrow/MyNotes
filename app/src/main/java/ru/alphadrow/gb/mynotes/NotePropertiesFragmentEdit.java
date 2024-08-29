@@ -86,7 +86,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
 
 
     // установка обработчика выбора даты
-    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+    DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
             currentNote.setDateOfCreation(new Date(
@@ -101,7 +101,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         Calendar date = Calendar.getInstance();
 
         new DatePickerDialog(requireContext(),
-                d,
+                onDateSetListener,
                 date.get(Calendar.YEAR),
                 date.get(Calendar.MONTH),
                 date.get(Calendar.DAY_OF_MONTH)
@@ -130,11 +130,6 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
             public void onClick(View v) {
                 int index = notesSource.getNoteId(currentNote);
                 currentNote = collectNote();
-                if (index < 0){
-                    notesSource.addNote(currentNote);
-                } else {
-                    notesSource.updateNote(index, currentNote);
-                }
                 publisher.notifyTask(currentNote);
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
 

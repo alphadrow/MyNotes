@@ -23,7 +23,7 @@ public class MyDataBaseFirebaseImpl implements NotesSource{
 
 
     @Override
-    public NotesSource init(NotesSourceResponse notesSourceResponse) {
+    public List<Note> init(NotesSourceResponse notesSourceResponse) {
         
         collectionReference.orderBy(NoteTranslate.Fields.DATE_OF_CREATION, Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -36,11 +36,11 @@ public class MyDataBaseFirebaseImpl implements NotesSource{
                                         docFields.getData());
                                 notes.add(note);
                             }
-                            notesSourceResponse.initialazed(MyDataBaseFirebaseImpl.this);
+                            notesSourceResponse.initialazed(notes);
                         }
                     }
                 });
-        return this;
+        return notes;
     }
 
     @Override

@@ -2,6 +2,8 @@ package ru.alphadrow.gb.mynotes;
 
 import com.google.firebase.Timestamp;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +35,7 @@ public class NoteTranslate {
     public static Note documentToNote(String id, Map<String, Object> doc){
         Note result = new Note((String) doc.get(Fields.NAME),
                 (String) doc.get(Fields.DESCRIPTION),
-                ((Timestamp) doc.get(Fields.DATE_OF_CREATION)).toDate(),
+                 new Date((Long)doc.get(Fields.DATE_OF_CREATION)),
                 stringToImportance(Fields.IMPORTANCE));
         result.setId(id);
         return result;
@@ -46,6 +48,9 @@ public class NoteTranslate {
         result.put(Fields.NAME, note.getName());
         result.put(Fields.DESCRIPTION, note.getDescription());
         result.put(Fields.IMPORTANCE, note.getImportance().toString());
+        result.put(Fields.DATE_OF_CREATION, note.getDateOfCreation().getTime());
         return result;
     }
+
+
 }

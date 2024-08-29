@@ -3,7 +3,6 @@ package ru.alphadrow.gb.mynotes;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 import ru.alphadrow.gb.mynotes.observe.Observer;
 import ru.alphadrow.gb.mynotes.observe.Publisher;
 
@@ -31,7 +32,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     boolean isLandScape;
 
 
-    NotesSource noteSource;
+    NotesSource noteSource = new MyDataBaseFirebaseImpl();
     NoteAdapter noteAdapter;
     Navigation navigation;
     Publisher publisher;
@@ -59,7 +60,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        noteSource = new MyDataBaseFirebaseImpl();
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
         }
@@ -83,13 +83,13 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
         noteAdapter = new NoteAdapter(this);
 
-        noteSource = new MyDataBaseFirebaseImpl().init(new NotesSourceResponse() {
+        noteSource.init(new NotesSourceResponse() {
+
             @Override
-            public void initialazed(NotesSource notesSource) {
-                noteAdapter.notifyDataSetChanged();
+            public void initialazed(List<Note> notes) {
+                noteAdapter.setNotes(notes);
             }
         });
-        noteAdapter.setNotesSource(noteSource);
         return view;
     }
 
@@ -111,7 +111,8 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
                     @Override
                     public void updateState(Note note) {
                         noteSource.addNote(note);
-                        noteAdapter.notifyItemInserted(noteSource.size() - 1);
+                        noteAdapter.addNote(note);
+                        noteAdapter.notifyItemInserted(noteAdapter.sizeOfList());
                     }
                 });
             }
@@ -125,8 +126,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
 
     private void showNoteProperties(Note note) {
         currentNote = note;
-        Log.d("myLogs", "currentNote.getName() :" + currentNote.getName());
-
         if (isLandScape) {
             showNotePropertiesLand();
         } else {
@@ -160,16 +159,18 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int position = noteAdapter.getMenuContextClickPosition();
         if (item.getItemId() == R.id.deleteItem) {
-            noteSource.deleteNote(item.getItemId());
-            noteAdapter.notifyItemChanged(item.getItemId());
+            noteSource.deleteNote(position);
+            noteAdapter.removeItemById(position);
+            noteAdapter.notifyItemRemoved(item.getItemId());
         }
         if (item.getItemId() == R.id.editItem) {
             navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
             publisher.subscribe(new Observer() {
                 @Override
                 public void updateState(Note note) {
-                    noteSource.updateNote(position, note);
-                    noteAdapter.notifyItemChanged(noteSource.size() - 1);
+                    noteSource.updateNote(position, note);  // может эти 2 строчки
+                    noteAdapter.updateNote(position, note); // вынести в отдельный метод? и в других местах...
+                    noteAdapter.notifyItemChanged(position);
                 }
             });
         }
@@ -177,12 +178,15 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
 
     }
 
+
+
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int position = noteAdapter.getMenuContextClickPosition();
         currentNote = noteSource.getNote(position);
         if (item.getItemId() == R.id.deleteItem) {
-            noteSource.deleteNote(position);
+            noteSource.deleteNote(position);        //TODO интуитивно понимаю что можно или noteSource спрятать в noteAdapter или наоборот... а как будет правильно?
+            noteAdapter.removeItemById(position);
             noteAdapter.notifyItemRemoved(position);
         }
         if (item.getItemId() == R.id.editItem) {
@@ -191,10 +195,12 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
                 @Override
                 public void updateState(Note note) {
                     noteSource.updateNote(position, note);
+                    noteAdapter.updateNote(position, note);
                     noteAdapter.notifyItemChanged(noteSource.size() - 1);
                 }
             });
         }
+
         return super.onContextItemSelected(item);
     }
 

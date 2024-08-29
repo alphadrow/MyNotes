@@ -22,7 +22,7 @@ public class NotePropertiesFragment extends Fragment {
     boolean isLandScape;
 
 
-    TextView textView;
+    TextView nameTextView;
     Button buttonEdit;
 
     TextView description;
@@ -94,14 +94,14 @@ public class NotePropertiesFragment extends Fragment {
                         .commit();
             }
         });
-        textView.setText(this.currentNote.getName());
+        nameTextView.setText(this.currentNote.getName());
         description.setText(this.currentNote.getDescription());
         dateOfCreate.setText(this.currentNote.getDateOfCreation().toString());
         importance.setText(this.currentNote.getImportance().toString());
     }
 
     private void initContent(@NonNull View view) {
-        textView = view.findViewById(R.id.nameTextView);
+        nameTextView = view.findViewById(R.id.nameTextView);
         buttonEdit = view.findViewById(R.id.editButton);
         description = view.findViewById(R.id.descriptionTextView);
         dateOfCreate = view.findViewById(R.id.timeAndDateTextView);
