@@ -1,7 +1,6 @@
 package ru.alphadrow.gb.mynotes;
 
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,7 @@ public class NoteDatePickerFragment extends Fragment {
     DatePicker datePicker;
     Note currentNote;
     boolean isLandScape;
-    MyDataBase myDataBase = MyDataBase.getInstance();
+    MyDataBaseLocalImpl myDataBaseLocalImpl = MyDataBaseLocalImpl.getInstance();
 
     public static NoteDatePickerFragment newInstance(Note note){
         NoteDatePickerFragment fragment=  new NoteDatePickerFragment();
@@ -55,7 +54,7 @@ public class NoteDatePickerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(Settings.KEY_NOTE, currentNote);
-        outState.putParcelable(Settings.KEY_DB, myDataBase);
+        outState.putParcelable(Settings.KEY_DB, myDataBaseLocalImpl);
         super.onSaveInstanceState(outState);
     }
     @Override

@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Note implements Parcelable{
+    private String id;
     private String name;
     private String description;
     private Date dateOfCreation;
@@ -84,5 +85,13 @@ public class Note implements Parcelable{
 
     public void setImportance(Importance importance) {
         this.importance = importance;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

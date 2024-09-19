@@ -7,20 +7,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MyDataBase implements Parcelable, MyDataBaseInterface {
+public class MyDataBaseLocalImpl implements Parcelable, NotesSource {
 
-    static MyDataBase myDB = new MyDataBase();
+    static MyDataBaseLocalImpl myDB = new MyDataBaseLocalImpl();
     private static List<Note> noteList = new ArrayList<>();
 
 
-    public MyDataBase() {
+    public MyDataBaseLocalImpl() {
     }
 
     public int size(){
         return noteList.size();
     }
 
-    protected MyDataBase(Parcel in) {
+    protected MyDataBaseLocalImpl(Parcel in) {
     }
 
     @Override
@@ -32,19 +32,19 @@ public class MyDataBase implements Parcelable, MyDataBaseInterface {
         return 0;
     }
 
-    public static final Creator<MyDataBase> CREATOR = new Creator<MyDataBase>() {
+    public static final Creator<MyDataBaseLocalImpl> CREATOR = new Creator<MyDataBaseLocalImpl>() {
         @Override
-        public MyDataBase createFromParcel(Parcel in) {
-            return new MyDataBase(in);
+        public MyDataBaseLocalImpl createFromParcel(Parcel in) {
+            return new MyDataBaseLocalImpl(in);
         }
 
         @Override
-        public MyDataBase[] newArray(int size) {
-            return new MyDataBase[size];
+        public MyDataBaseLocalImpl[] newArray(int size) {
+            return new MyDataBaseLocalImpl[size];
         }
     };
 
-    public static MyDataBase getInstance() {
+    public static MyDataBaseLocalImpl getInstance() {
         if (noteList.isEmpty()) {
             setList();
         }
@@ -62,6 +62,8 @@ public class MyDataBase implements Parcelable, MyDataBaseInterface {
 
     }
 
+
+
     @Override
     public void deleteNote(int position) {
         noteList.remove(position);
@@ -73,16 +75,23 @@ public class MyDataBase implements Parcelable, MyDataBaseInterface {
     }
 
     @Override
-    public void addNote(Note note) {
-        noteList.add(note);
-    }
-    @Override
-    public List<Note> getNoteList() {
-        return noteList;
+    public void addNote(Note newNote) {
+        noteList.add(newNote);
     }
 
     @Override
-    public Note getNote(int i){
-        return noteList.get(i);
+    public int getNoteId(Note note) {
+        return noteList.indexOf(note);
+    }
+
+    @Override
+    public List<Note> init(NotesSourceResponse notesSourceResponse) {
+        return noteList;
+    }
+
+
+    @Override
+    public Note getNote(int position){
+        return noteList.get(position);
     }
 }

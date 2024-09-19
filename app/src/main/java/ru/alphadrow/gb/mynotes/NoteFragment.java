@@ -3,7 +3,6 @@ package ru.alphadrow.gb.mynotes;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,23 +14,26 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Date;
+import java.util.List;
 
 import ru.alphadrow.gb.mynotes.observe.Observer;
 import ru.alphadrow.gb.mynotes.observe.Publisher;
 
-public class NoteFragment extends Fragment implements MyOnClickListener {
+public class NoteFragment extends Fragment implements MyOnClickListener, FragmentForContextMenuRegistrar {
 
     Note currentNote;
 
     boolean isLandScape;
-    MyDataBase myDataBase;
+
+
+    NotesSource noteSource = new MyDataBaseFirebaseImpl();
     NoteAdapter noteAdapter;
     Navigation navigation;
     Publisher publisher;
@@ -50,39 +52,20 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity)context;
-        navigation = activity.getNavigation();
-        publisher = activity.getPublisher();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        myDataBase = MyDataBase.getInstance();
-        if (savedInstanceState != null) {
-            currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
-            myDataBase = savedInstanceState.getParcelable(Settings.KEY_DB);
-        }
-        if (isLandScape)
-            if (currentNote != null) {
-                showNoteProperties(currentNote);
-            } else {
-                showNoteProperties(myDataBase.getNote(0));
-            }
 
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(Settings.KEY_NOTE, currentNote);
-        outState.putParcelable(Settings.KEY_DB, myDataBase);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
+
         return view;
     }
 
@@ -90,11 +73,33 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MainActivity activity = (MainActivity) requireActivity();
+        navigation = activity.getNavigation();
+        publisher = MyApp.getPublisher();
+        noteAdapter = new NoteAdapter(this);
+
+        noteSource.init(new NotesSourceResponse() {
+
+            @Override
+            public void initialazed(List<Note> notes) {
+                noteAdapter.setNotes(notes);
+            }
+        });
+        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        if (savedInstanceState != null) {
+            currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
+        }
+        if (isLandScape)
+            if (currentNote != null) {
+                showNoteProperties(currentNote);
+            } else {
+                showNoteProperties(noteSource.getNote(0));
+            }
+
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        noteAdapter = new NoteAdapter(this);
         noteAdapter.setOnMyOnClickListener(this);
         FloatingActionButton floatingActionButton = view.findViewById(R.id.floatingButtonPlus);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -104,8 +109,9 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
                 publisher.subscribe(new Observer() {
                     @Override
                     public void updateState(Note note) {
-                        myDataBase.addNote(note);
-                        noteAdapter.notifyItemInserted(myDataBase.size() - 1);
+                        noteSource.addNote(note);
+                        noteAdapter.addNote(note);
+                        noteAdapter.notifyItemInserted(noteAdapter.sizeOfList());
                     }
                 });
             }
@@ -117,21 +123,8 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         recyclerView.setItemAnimator(defaultItemAnimator);
     }
 
-    private String[] getTextViewArray() {
-        String[] resultArray = new String[myDataBase.getNoteList().size()];
-        for (int i = 0; i < myDataBase.getNoteList().size(); i++) {
-
-            String name = myDataBase.getNoteList().get(i).getName();
-            resultArray[i] = name;
-        }
-        return resultArray;
-    }
-
-
     private void showNoteProperties(Note note) {
         currentNote = note;
-        Log.d("myLogs", "currentNote.getName() :" + currentNote.getName());
-
         if (isLandScape) {
             showNotePropertiesLand();
         } else {
@@ -158,23 +151,25 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
 
     @Override
     public void onMyClick(View view, int position) {
-        showNoteProperties(myDataBase.getNote(position));
+        showNoteProperties(noteSource.getNote(position));
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int position = noteAdapter.getMenuContextClickPosition();
         if (item.getItemId() == R.id.deleteItem) {
-            myDataBase.deleteNote(item.getItemId());
-            noteAdapter.notifyItemChanged(item.getItemId());
+            noteSource.deleteNote(position);
+            noteAdapter.removeItemById(position);
+            noteAdapter.notifyItemRemoved(item.getItemId());
         }
         if (item.getItemId() == R.id.editItem) {
-            navigation.addFragment(NotePropertiesFragmentEdit.newInstance(myDataBase.getNote(position)), true);
+            navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
             publisher.subscribe(new Observer() {
                 @Override
                 public void updateState(Note note) {
-                    myDataBase.updateNote(position, note);
-                    noteAdapter.notifyItemChanged(myDataBase.size() - 1);
+                    noteSource.updateNote(position, note);  // может эти 2 строчки
+                    noteAdapter.updateNote(position, note); // вынести в отдельный метод? и в других местах...
+                    noteAdapter.notifyItemChanged(position);
                 }
             });
         }
@@ -182,24 +177,29 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
 
     }
 
+
+
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int position = noteAdapter.getMenuContextClickPosition();
-        currentNote = myDataBase.getNote(position);
+        currentNote = noteSource.getNote(position);
         if (item.getItemId() == R.id.deleteItem) {
-            myDataBase.deleteNote(position);
+            noteSource.deleteNote(position);        //TODO интуитивно понимаю что можно или noteSource спрятать в noteAdapter или наоборот... а как будет правильно?
+            noteAdapter.removeItemById(position);
             noteAdapter.notifyItemRemoved(position);
         }
         if (item.getItemId() == R.id.editItem) {
-            navigation.addFragment(NotePropertiesFragmentEdit.newInstance(myDataBase.getNote(position)), true);
+            navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
             publisher.subscribe(new Observer() {
                 @Override
                 public void updateState(Note note) {
-                    myDataBase.updateNote(position, note);
-                    noteAdapter.notifyItemChanged(myDataBase.size() - 1);
+                    noteSource.updateNote(position, note);
+                    noteAdapter.updateNote(position, note);
+                    noteAdapter.notifyItemChanged(noteSource.size() - 1);
                 }
             });
         }
+
         return super.onContextItemSelected(item);
     }
 
@@ -224,5 +224,10 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         requireActivity().getMenuInflater().inflate(R.menu.item_menu, menu);
+    }
+
+    @Override
+    public void register(View view) {
+        registerForContextMenu(view);
     }
 }

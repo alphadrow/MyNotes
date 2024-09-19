@@ -9,7 +9,6 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsFragment extends Fragment {
 
@@ -20,13 +19,13 @@ public class SettingsFragment extends Fragment {
     RadioButton radioButtonModeOne;
     RadioButton radioButtonModeTwo;
 
-    MyDataBase myDataBase;
+    MyDataBaseLocalImpl myDataBaseLocalImpl;
 
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        myDataBase = MyDataBase.getInstance();
+        myDataBaseLocalImpl = MyDataBaseLocalImpl.getInstance();
         View v = inflater.inflate(R.layout.fragment_settings, container, false);
         setContent(v);
         setListeners();
