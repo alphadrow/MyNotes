@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +26,7 @@ import java.util.List;
 import ru.alphadrow.gb.mynotes.observe.Observer;
 import ru.alphadrow.gb.mynotes.observe.Publisher;
 
-public class NoteFragment extends Fragment implements MyOnClickListener {
+public class NoteFragment extends Fragment implements MyOnClickListener, FragmentForContextMenuRegistrar {
 
     Note currentNote;
 
@@ -51,14 +52,39 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity) context;
-        navigation = activity.getNavigation();
-        publisher = activity.getPublisher();
+
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(Settings.KEY_NOTE, currentNote);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_notes, container, false);
+
+        return view;
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        MainActivity activity = (MainActivity) requireActivity();
+        navigation = activity.getNavigation();
+        publisher = MyApp.getPublisher();
+        noteAdapter = new NoteAdapter(this);
+
+        noteSource.init(new NotesSourceResponse() {
+
+            @Override
+            public void initialazed(List<Note> notes) {
+                noteAdapter.setNotes(notes);
+            }
+        });
         isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
@@ -70,33 +96,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
                 showNoteProperties(noteSource.getNote(0));
             }
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(Settings.KEY_NOTE, currentNote);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notes, container, false);
-        noteAdapter = new NoteAdapter(this);
-
-        noteSource.init(new NotesSourceResponse() {
-
-            @Override
-            public void initialazed(List<Note> notes) {
-                noteAdapter.setNotes(notes);
-            }
-        });
-        return view;
-    }
-
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
@@ -225,5 +224,10 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         requireActivity().getMenuInflater().inflate(R.menu.item_menu, menu);
+    }
+
+    @Override
+    public void register(View view) {
+        registerForContextMenu(view);
     }
 }

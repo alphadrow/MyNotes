@@ -23,7 +23,7 @@ public class Publisher {
     public void notifyTask(Note note){
         for (Observer observer: observers) {
             observer.updateState(note);
-            unsubscribe(observer);
+            unsubscribe(observer); //TODO понять почему мы отписываемся
         }
     }
 }

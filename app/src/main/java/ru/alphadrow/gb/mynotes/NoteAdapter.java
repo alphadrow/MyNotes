@@ -7,11 +7,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
 
@@ -32,14 +32,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
     private int menuContextClickPosition;
 
-    private Fragment fragment;
+    private FragmentForContextMenuRegistrar registrar;
     public void setOnMyOnClickListener(MyOnClickListener listener){
         this.listener = listener;
     }
 
 
-    public NoteAdapter(Fragment fragment) {
-        this.fragment = fragment;
+    public NoteAdapter(FragmentForContextMenuRegistrar registrar) {
+        this.registrar = registrar;
     }
 
 
@@ -97,7 +97,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             cardView = itemView.findViewById(R.id.noteCardView);
             name = itemView.findViewById(R.id.noteNameTextView);
             dateOfCreation = itemView.findViewById(R.id.noteCreateAtTextView);
-            fragment.registerForContextMenu(cardView);
+            registrar.register(cardView);
             cardView.setOnLongClickListener(new View.OnLongClickListener() {
 
                 @Override

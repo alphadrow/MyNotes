@@ -80,6 +80,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        publisher = MyApp.getPublisher();
         initContent(view);
         setContent();
     }
@@ -213,7 +214,6 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        publisher = ((MainActivity) context).getPublisher();
     }
 
     @Override
@@ -225,6 +225,5 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        publisher.notifyTask(currentNote);
     }
 }

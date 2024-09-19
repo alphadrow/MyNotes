@@ -1,6 +1,7 @@
 package ru.alphadrow.gb.mynotes;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,16 +24,14 @@ import ru.alphadrow.gb.mynotes.observe.Publisher;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Publisher publisher = new Publisher();
+    private Publisher publisher;
     private Navigation navigation;
 
     public Navigation getNavigation() {
         return navigation;
     }
 
-    public Publisher getPublisher() {
-        return publisher;
-    }
+
 
 
 
@@ -79,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+    }
 
     private Toolbar initToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
