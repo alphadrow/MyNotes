@@ -4,6 +4,8 @@ import android.icu.util.LocaleData;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
@@ -93,5 +95,16 @@ public class Note implements Parcelable{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @NonNull
+    @Override
+    public String toString(){
+        String result = "";
+        result += this.name + "/n";
+        result += this.description + "/n";
+        result += this.dateOfCreation.toString() + "/n";
+        result += this.importance.toString() + "/n";
+        return result;
     }
 }

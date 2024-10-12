@@ -19,7 +19,6 @@ public class NoteDatePickerFragment extends Fragment {
     DatePicker datePicker;
     Note currentNote;
     boolean isLandScape;
-    MyDataBaseLocalImpl myDataBaseLocalImpl = MyDataBaseLocalImpl.getInstance();
 
     public static NoteDatePickerFragment newInstance(Note note){
         NoteDatePickerFragment fragment=  new NoteDatePickerFragment();
@@ -54,7 +53,6 @@ public class NoteDatePickerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(Settings.KEY_NOTE, currentNote);
-        outState.putParcelable(Settings.KEY_DB, myDataBaseLocalImpl);
         super.onSaveInstanceState(outState);
     }
     @Override

@@ -85,8 +85,7 @@ public class MyDataBaseLocalImpl implements Parcelable, NotesSource {
     }
 
     @Override
-    public List<Note> init(NotesSourceResponse notesSourceResponse) {
-        return noteList;
+    public void init(NotesSourceResponse notesSourceResponse) {
     }
 
 

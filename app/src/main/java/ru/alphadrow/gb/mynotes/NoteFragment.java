@@ -153,6 +153,14 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     @Override
     public void onMyClick(View view, int position) {
         showNoteProperties(noteSource.getNote(position));
+//        navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
+        publisher.subscribe(new Observer() {
+            @Override
+            public void updateState(Note note) {
+                noteSource.updateNote(position, note);  // может эти 2 строчки
+                noteAdapter.updateNote(position, note); // вынести в отдельный метод? и в других местах...
+            }
+        });
     }
 
     @Override
@@ -161,7 +169,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         if (item.getItemId() == R.id.deleteItem) {
             noteSource.deleteNote(position);
             noteAdapter.removeItemById(position);
-            noteAdapter.notifyItemRemoved(item.getItemId());
         }
         if (item.getItemId() == R.id.editItem) {
             navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
@@ -170,7 +177,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
                 public void updateState(Note note) {
                     noteSource.updateNote(position, note);  // может эти 2 строчки
                     noteAdapter.updateNote(position, note); // вынести в отдельный метод? и в других местах...
-                    noteAdapter.notifyItemChanged(position);
                 }
             });
         }
@@ -187,7 +193,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         if (item.getItemId() == R.id.deleteItem) {
             noteSource.deleteNote(position);        //TODO интуитивно понимаю что можно или noteSource спрятать в noteAdapter или наоборот... а как будет правильно?
             noteAdapter.removeItemById(position);
-            noteAdapter.notifyItemRemoved(position);
         }
         if (item.getItemId() == R.id.editItem) {
             navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
@@ -196,7 +201,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
                 public void updateState(Note note) {
                     noteSource.updateNote(position, note);
                     noteAdapter.updateNote(position, note);
-                    noteAdapter.notifyItemChanged(noteSource.size() - 1);
                 }
             });
         }

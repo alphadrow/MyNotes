@@ -3,7 +3,7 @@ package ru.alphadrow.gb.mynotes;
 import java.util.List;
 
 interface NotesSource {
-    List<Note> init(NotesSourceResponse notesSourceResponse);
+    void init(NotesSourceResponse notesSourceResponse);
     Note getNote(int position);
     int size();
     void deleteNote(int position);

@@ -52,6 +52,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
     public void removeItemById(int position){
         notes.remove(position);
+        this.notifyItemRemoved(position);
     }
 
     public void addNote(Note note){
@@ -61,6 +62,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
     public void updateNote(int position, Note note){
         notes.set(position, note);
+        this.notifyItemChanged(position);
     }
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
@@ -110,6 +112,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
                 @Override
                 public void onClick(View v) {
                     listener.onMyClick(v, getAdapterPosition());
+
                 }
             });
         }

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,6 +136,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
 
             }
         });
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -159,8 +161,6 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
 
     private int getRealRBID(Importance importance) {
         switch (importance) {
-            case FORGET_ABOUT_IT:
-                return R.id.forgetAboutItImportanceRB;
             case LOW:
                 return R.id.lowImportanceRB;
             case MEDIUM:
@@ -191,7 +191,6 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     private Note collectNote() {
         String name = this.name.getText().toString();
         String description = this.description.getText().toString();
-        Importance importance = this.importance;
         if (currentNote != null) {
             currentNote.setName(name);
             currentNote.setDescription(description);
