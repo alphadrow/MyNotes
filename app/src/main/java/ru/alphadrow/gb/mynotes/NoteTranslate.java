@@ -36,7 +36,7 @@ public class NoteTranslate {
         Note result = new Note((String) doc.get(Fields.NAME),
                 (String) doc.get(Fields.DESCRIPTION),
                  new Date((Long)doc.get(Fields.DATE_OF_CREATION)),
-                stringToImportance(Fields.IMPORTANCE));
+                stringToImportance((String) doc.get(Fields.IMPORTANCE)));
         result.setId(id);
         return result;
     }

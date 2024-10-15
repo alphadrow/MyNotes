@@ -26,6 +26,7 @@ import ru.alphadrow.gb.mynotes.observe.Observer;
 import ru.alphadrow.gb.mynotes.observe.Publisher;
 
 public class NoteFragment extends Fragment implements MyOnClickListener {
+    public static String ARG_NOTE = "note";
 
     Note currentNote;
 
@@ -126,6 +127,8 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
 
     private void showNoteProperties(Note note) {
         currentNote = note;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ARG_NOTE, currentNote);
         if (isLandScape) {
             showNotePropertiesLand();
         } else {
@@ -134,6 +137,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     }
 
     private void showNotePropertiesPort() {
+
         requireActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
@@ -152,8 +156,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
 
     @Override
     public void onMyClick(View view, int position) {
-        showNoteProperties(noteSource.getNote(position));
-//        navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
         publisher.subscribe(new Observer() {
             @Override
             public void updateState(Note note) {
@@ -161,6 +163,10 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
                 noteAdapter.updateNote(position, note); // вынести в отдельный метод? и в других местах...
             }
         });
+        navigation.addFragment(NotePropertiesFragment.newInstance(noteSource.getNote(position)), true);
+
+//        showNoteProperties(noteSource.getNote(position));
+
     }
 
     @Override

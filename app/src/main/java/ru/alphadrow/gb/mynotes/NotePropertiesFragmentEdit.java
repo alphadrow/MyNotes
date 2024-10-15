@@ -129,7 +129,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = notesSource.getNoteId(currentNote);
+//                int index = notesSource.getNoteId(currentNote);
                 currentNote = collectNote();
                 publisher.notifyTask(currentNote);
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
@@ -140,9 +140,6 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == forgetAboutItImportanceRB.getId()) {
-                    importance = (Importance.FORGET_ABOUT_IT);
-                }
                 if (checkedId == lowImportanceRB.getId()) {
                     importance = (Importance.LOW);
                 }
@@ -154,7 +151,10 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
                 }
                 if (checkedId == lifeAndDeathImportanceRB.getId()) {
                     importance = (Importance.LIFE_AND_DEATH);
+                } else {
+                    importance = (Importance.FORGET_ABOUT_IT);
                 }
+                currentNote.setImportance(importance);
             }
         });
     }
@@ -174,6 +174,22 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         }
     }
 
+    private Importance getImportanceById(int id) {
+        if (id == R.id.lowImportanceRB) {
+            return Importance.LOW;
+        }
+        if (id == R.id.mediumImportanceRB) {
+            return Importance.MEDIUM;
+        }
+        if (id == R.id.highImportanceRB) {
+            return Importance.HIGH;
+        }
+        if (id == R.id.lifeAndDeathImportanceRB) {
+            return Importance.LIFE_AND_DEATH;
+        }
+        else return Importance.FORGET_ABOUT_IT;
+    }
+
     private void initContent(@NonNull View view) {
         name = view.findViewById(R.id.nameEditText);
         description = view.findViewById(R.id.descriptionEditText);
@@ -191,6 +207,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     private Note collectNote() {
         String name = this.name.getText().toString();
         String description = this.description.getText().toString();
+        importance = getImportanceById(radioGroup.getCheckedRadioButtonId());
         if (currentNote != null) {
             currentNote.setName(name);
             currentNote.setDescription(description);
@@ -198,6 +215,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         }
         return currentNote;
     }
+
     @Override
     public void onMyClick(View view, int position) {
 
