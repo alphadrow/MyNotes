@@ -23,7 +23,7 @@ import java.util.Date;
 
 import ru.alphadrow.gb.mynotes.observe.Publisher;
 
-public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickListener {
+public class NotePropertiesEditFragment extends Fragment implements MyOnClickListener {
 
     private Publisher publisher;
 
@@ -43,14 +43,14 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     EditText description;
     public static String ARG_NOTE = "note";
 
-    public static NotePropertiesFragmentEdit newInstance() {
-        NotePropertiesFragmentEdit fragment = new NotePropertiesFragmentEdit();
+    public static NotePropertiesEditFragment newInstance() {
+        NotePropertiesEditFragment fragment = new NotePropertiesEditFragment();
         return fragment;
     }
 
 
-    public static NotePropertiesFragmentEdit newInstance(Note note) {
-        NotePropertiesFragmentEdit fragment = new NotePropertiesFragmentEdit();
+    public static NotePropertiesEditFragment newInstance(Note note) {
+        NotePropertiesEditFragment fragment = new NotePropertiesEditFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_NOTE, note);
         fragment.setArguments(bundle);
@@ -64,10 +64,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         if (getArguments() != null) {
             this.currentNote = getArguments().getParcelable(ARG_NOTE);
         } else {
-            this.currentNote = new Note(""
-                    , ""
-                    , new Date()
-                    , Importance.FORGET_ABOUT_IT);
+            this.currentNote = new Note("", "", new Date(), Importance.FORGET_ABOUT_IT);
         }
     }
 
@@ -90,10 +87,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-            currentNote.setDateOfCreation(new Date(
-                    datePicker.getYear(),
-                    datePicker.getMonth(),
-                    datePicker.getDayOfMonth()));
+            currentNote.setDateOfCreation(new Date(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth()));
         }
     };
 
@@ -101,13 +95,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     public void setDate(View v) {
         Calendar date = Calendar.getInstance();
 
-        new DatePickerDialog(requireContext(),
-                onDateSetListener,
-                date.get(Calendar.YEAR),
-                date.get(Calendar.MONTH),
-                date.get(Calendar.DAY_OF_MONTH)
-        )
-                .show();
+        new DatePickerDialog(requireContext(), onDateSetListener, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH)).show();
     }
 
 
@@ -129,9 +117,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                int index = notesSource.getNoteId(currentNote);
                 currentNote = collectNote();
-                publisher.notifyTask(currentNote);
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
 
             }
@@ -140,19 +126,20 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == lowImportanceRB.getId()) {
-                    importance = (Importance.LOW);
+                if (checkedId == R.id.lifeAndDeathImportance) {
+                    importance = Importance.LIFE_AND_DEATH;
                 }
-                if (checkedId == mediumImportanceRB.getId()) {
-                    importance = (Importance.MEDIUM);
+                if (checkedId == R.id.lowImportance) {
+                    importance = Importance.LOW;
                 }
-                if (checkedId == highImportanceRB.getId()) {
-                    importance = (Importance.HIGH);
+                if (checkedId == R.id.mediumImportance) {
+                    importance = Importance.MEDIUM;
                 }
-                if (checkedId == lifeAndDeathImportanceRB.getId()) {
-                    importance = (Importance.LIFE_AND_DEATH);
-                } else {
-                    importance = (Importance.FORGET_ABOUT_IT);
+                if (checkedId == R.id.highImportance) {
+                    importance = Importance.HIGH;
+                }
+                if (checkedId == R.id.forgetAboutItImportance) {
+                    importance = Importance.FORGET_ABOUT_IT;
                 }
                 currentNote.setImportance(importance);
             }
@@ -186,8 +173,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         }
         if (id == R.id.lifeAndDeathImportanceRB) {
             return Importance.LIFE_AND_DEATH;
-        }
-        else return Importance.FORGET_ABOUT_IT;
+        } else return Importance.FORGET_ABOUT_IT;
     }
 
     private void initContent(@NonNull View view) {
@@ -241,7 +227,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         publisher.notifyTask(currentNote);
+        super.onDestroy();
     }
 }

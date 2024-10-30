@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 
 public class SettingsFragment extends Fragment {
 
-    public static SettingsFragment newInstance(){
+    public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
 
@@ -22,10 +22,9 @@ public class SettingsFragment extends Fragment {
     MyDataBaseLocalImpl myDataBaseLocalImpl;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        myDataBaseLocalImpl = MyDataBaseLocalImpl.getInstance();
+        myDataBaseLocalImpl = new MyDataBaseLocalImpl().getInstance();
         View v = inflater.inflate(R.layout.fragment_settings, container, false);
         setContent(v);
         setListeners();

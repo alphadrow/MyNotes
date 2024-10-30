@@ -10,15 +10,12 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Note implements Parcelable{
+public class Note implements Parcelable {
     private String id;
     private String name;
     private String description;
     private Date dateOfCreation;
     private Importance importance;
-
-
-
 
 
     public Note(String name, String description, Date dateOfCreation, Importance importance) {
@@ -99,7 +96,7 @@ public class Note implements Parcelable{
 
     @NonNull
     @Override
-    public String toString(){
+    public String toString() {
         String result = "";
         result += this.name + "/n";
         result += this.description + "/n";

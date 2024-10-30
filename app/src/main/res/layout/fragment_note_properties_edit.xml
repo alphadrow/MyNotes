@@ -6,72 +6,75 @@
     android:orientation="vertical">
 
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<RadioGroup
-    android:id="@+id/importanceRG"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
->
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/nameEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size" />
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/descriptionEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size" />
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
-        <Button
-            android:id="@+id/editDate"
-            android:text="@string/edit_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-        <Button
-            android:id="@+id/applyButton"
-            android:text="@string/apply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </LinearLayout>
+        <RadioGroup
+            android:id="@+id/importanceRG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
-        android:id="@+id/forgetAboutItImportanceRB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
-        android:id="@+id/lowImportanceRB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatRadioButton
-        android:id="@+id/mediumImportanceRB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/editDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/edit_date" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
-        android:id="@+id/highImportanceRB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <androidx.appcompat.widget.AppCompatRadioButton
-        android:id="@+id/lifeAndDeathImportanceRB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/applyButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/apply" />
+            </LinearLayout>
 
 
-</RadioGroup>
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/forgetAboutItImportanceRB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/lowImportanceRB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/mediumImportanceRB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/highImportanceRB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/lifeAndDeathImportanceRB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </RadioGroup>
     </ScrollView>
 </LinearLayout>

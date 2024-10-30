@@ -1,5 +1,6 @@
 package ru.alphadrow.gb.mynotes;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Publisher publisher = new Publisher();
     private Navigation navigation;
+    boolean isLandScape;
 
     public Navigation getNavigation() {
         return navigation;
@@ -33,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
     public Publisher getPublisher() {
         return publisher;
     }
-
-
 
 
     @Override
@@ -68,13 +68,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         navigation = new Navigation(getSupportFragmentManager());
         setContentView(R.layout.activity_main);
 
         initDrawer(initToolBar());
 
         if (savedInstanceState == null) {
-            navigation.addFragment(NoteFragment.newInstance(), false);
+            navigation.addFragment(NoteFragment.newInstance(), false, "noteFragment");
         }
 
     }
@@ -88,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initDrawer(Toolbar toolbar) {
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
-                drawerLayout, toolbar, R.string.about_note, R.string.about_title);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.about_note, R.string.about_title);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -115,8 +115,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Fragment backStackFragment = getSupportFragmentManager()
-                .findFragmentById(R.id.notesContainer);
+        Fragment backStackFragment = getSupportFragmentManager().findFragmentById(R.id.notesContainer);
         if (backStackFragment instanceof NotePropertiesFragment) {
             getOnBackPressedDispatcher().onBackPressed();
         }

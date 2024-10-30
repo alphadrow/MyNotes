@@ -20,8 +20,8 @@ public class NoteDatePickerFragment extends Fragment {
     Note currentNote;
     boolean isLandScape;
 
-    public static NoteDatePickerFragment newInstance(Note note){
-        NoteDatePickerFragment fragment=  new NoteDatePickerFragment();
+    public static NoteDatePickerFragment newInstance(Note note) {
+        NoteDatePickerFragment fragment = new NoteDatePickerFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(Settings.ARG_NOTE, note);
         fragment.setArguments(bundle);
@@ -31,21 +31,19 @@ public class NoteDatePickerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             this.currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
-            datePicker.updateDate(currentNote.getDateOfCreation().getYear(),
-                    currentNote.getDateOfCreation().getMonth(),
-                    currentNote.getDateOfCreation().getDay());
+            datePicker.updateDate(currentNote.getDateOfCreation().getYear(), currentNote.getDateOfCreation().getMonth(), currentNote.getDateOfCreation().getDay());
         }
-        isLandScape = getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE;
-        if(getArguments()!=null){
+        isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        if (getArguments() != null) {
             this.currentNote = getArguments().getParcelable(Settings.ARG_NOTE);
         }
     }
 
 
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
@@ -55,9 +53,10 @@ public class NoteDatePickerFragment extends Fragment {
         outState.putParcelable(Settings.KEY_NOTE, currentNote);
         super.onSaveInstanceState(outState);
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_datepicker,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_datepicker, container, false);
         datePicker = view.findViewById(R.id.datePicker);
         Button buttonChangeDate = view.findViewById(R.id.button_change_date);
         buttonChangeDate.setOnClickListener(new View.OnClickListener() {
@@ -65,10 +64,7 @@ public class NoteDatePickerFragment extends Fragment {
             public void onClick(View v) {
 
 
-                    currentNote.setDateOfCreation(new Date(
-                            datePicker.getYear(),
-                            datePicker.getMonth() + 1,
-                            datePicker.getDayOfMonth()));
+                currentNote.setDateOfCreation(new Date(datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth()));
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
 
             }

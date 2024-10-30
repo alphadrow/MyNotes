@@ -16,7 +16,7 @@ public class MyDataBaseLocalImpl implements Parcelable, NotesSource {
     public MyDataBaseLocalImpl() {
     }
 
-    public int size(){
+    public int size() {
         return noteList.size();
     }
 
@@ -44,7 +44,7 @@ public class MyDataBaseLocalImpl implements Parcelable, NotesSource {
         }
     };
 
-    public static MyDataBaseLocalImpl getInstance() {
+    public MyDataBaseLocalImpl getInstance() {
         if (noteList.isEmpty()) {
             setList();
         }
@@ -55,13 +55,12 @@ public class MyDataBaseLocalImpl implements Parcelable, NotesSource {
     private static void setList() {
 
         noteList.add(new Note("Вынести мусор", "Выносить мусор нужно каждый день.", new Date(1999, 1, 1), Importance.LIFE_AND_DEATH));
-            noteList.add(new Note("Убить Билла", "Bill must die", new Date(2000, 2, 2), Importance.LOW));
-            noteList.add(new Note("Захватить мир", "Что может быть проще?", new Date(2000, 3, 3), Importance.MEDIUM));
-            noteList.add(new Note("Сбежать от санитаров", "Это уже сложнее...", new Date(2000, 4, 4), Importance.HIGH));
-            noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
+        noteList.add(new Note("Убить Билла", "Bill must die", new Date(2000, 2, 2), Importance.LOW));
+        noteList.add(new Note("Захватить мир", "Что может быть проще?", new Date(2000, 3, 3), Importance.MEDIUM));
+        noteList.add(new Note("Сбежать от санитаров", "Это уже сложнее...", new Date(2000, 4, 4), Importance.HIGH));
+        noteList.add(new Note("Забыл", "Кто здесь?!", new Date(2000, 4, 4), Importance.FORGET_ABOUT_IT));
 
     }
-
 
 
     @Override
@@ -90,7 +89,7 @@ public class MyDataBaseLocalImpl implements Parcelable, NotesSource {
 
 
     @Override
-    public Note getNote(int position){
+    public Note getNote(int position) {
         return noteList.get(position);
     }
 }

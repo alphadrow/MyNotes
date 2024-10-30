@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +34,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     boolean isLandScape;
 
 
-    NotesSource noteSource = new MyDataBaseFirebaseImpl();
+    NotesSource noteSource = MyDataBaseFirebaseImpl.getInstance();
     NoteAdapter noteAdapter;
     Navigation navigation;
     Publisher publisher;
@@ -64,12 +65,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
         }
-        if (isLandScape)
-            if (currentNote != null) {
-                showNoteProperties(currentNote);
-            } else {
-                showNoteProperties(noteSource.getNote(0));
-            }
+
 
     }
 
@@ -82,7 +78,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
-        noteAdapter = new NoteAdapter(this);
+        noteAdapter = NoteAdapter.getInstance(this);
 
         noteSource.init(new NotesSourceResponse() {
 
@@ -107,7 +103,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigation.addFragment(NotePropertiesFragmentEdit.newInstance(), true);
+                navigation.addFragment(NotePropertiesEditFragment.newInstance(), true, "notePropertiesEditFragment_float");
                 publisher.subscribe(new Observer() {
                     @Override
                     public void updateState(Note note) {
@@ -115,6 +111,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
                         noteAdapter.addNote(note);
                         noteAdapter.notifyItemInserted(noteAdapter.sizeOfList());
                     }
+
                 });
             }
         });
@@ -125,48 +122,19 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         recyclerView.setItemAnimator(defaultItemAnimator);
     }
 
-    private void showNoteProperties(Note note) {
-        currentNote = note;
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(ARG_NOTE, currentNote);
-        if (isLandScape) {
-            showNotePropertiesLand();
-        } else {
-            showNotePropertiesPort();
-        }
-    }
-
-    private void showNotePropertiesPort() {
-
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.notesContainer, NotePropertiesFragment.newInstance(currentNote))
-                .addToBackStack("")
-                .commit();
-    }
-
-    private void showNotePropertiesLand() {
-        requireActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.notePropertiesContainer, NotePropertiesFragment.newInstance(currentNote))
-                .commit();
-    }
-
     @Override
     public void onMyClick(View view, int position) {
+        currentNote = noteSource.getNote(position);
         publisher.subscribe(new Observer() {
             @Override
             public void updateState(Note note) {
-                noteSource.updateNote(position, note);  // может эти 2 строчки
-                noteAdapter.updateNote(position, note); // вынести в отдельный метод? и в других местах...
+                noteSource.updateNote(position, currentNote);  // может эти 2 строчки
+                noteAdapter.updateNote(position, currentNote); // вынести в отдельный метод? и в других местах...
             }
+
+
         });
-        navigation.addFragment(NotePropertiesFragment.newInstance(noteSource.getNote(position)), true);
-
-//        showNoteProperties(noteSource.getNote(position));
-
+        navigation.addFragment(NotePropertiesFragment.newInstance(noteSource.getNote(position)), true, "notePropertiesFragment_onClick");
     }
 
     @Override
@@ -177,19 +145,23 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
             noteAdapter.removeItemById(position);
         }
         if (item.getItemId() == R.id.editItem) {
-            navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
             publisher.subscribe(new Observer() {
+
+
+
                 @Override
                 public void updateState(Note note) {
-                    noteSource.updateNote(position, note);  // может эти 2 строчки
-                    noteAdapter.updateNote(position, note); // вынести в отдельный метод? и в других местах...
+                    noteAdapter.updateNote(position, note);
+                    noteSource.updateNote(position, note);
+
                 }
+
             });
+            navigation.addFragment(NotePropertiesEditFragment.newInstance(noteSource.getNote(position)), true, "notePropertiesFragment_onOptions");
         }
         return super.onOptionsItemSelected(item);
 
     }
-
 
 
     @Override
@@ -197,18 +169,23 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         int position = noteAdapter.getMenuContextClickPosition();
         currentNote = noteSource.getNote(position);
         if (item.getItemId() == R.id.deleteItem) {
-            noteSource.deleteNote(position);        //TODO интуитивно понимаю что можно или noteSource спрятать в noteAdapter или наоборот... а как будет правильно?
-            noteAdapter.removeItemById(position);
+            Bundle bundle = new Bundle();
+            bundle.putInt(Settings.KEY_POS, position);
+            DialogBeforeDeleteFragment dialogBeforeDeleteFragment = new DialogBeforeDeleteFragment(bundle);
+            dialogBeforeDeleteFragment.show(requireActivity().getSupportFragmentManager(), "TAG");
+
         }
         if (item.getItemId() == R.id.editItem) {
-            navigation.addFragment(NotePropertiesFragmentEdit.newInstance(noteSource.getNote(position)), true);
             publisher.subscribe(new Observer() {
+
+
                 @Override
                 public void updateState(Note note) {
-                    noteSource.updateNote(position, note);
                     noteAdapter.updateNote(position, note);
+                    noteSource.updateNote(position, note);
                 }
             });
+            navigation.addFragment(NotePropertiesEditFragment.newInstance(noteSource.getNote(position)), true, "notePropertiesFragment_onContext");
         }
 
         return super.onContextItemSelected(item);
@@ -236,4 +213,5 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         super.onCreateContextMenu(menu, v, menuInfo);
         requireActivity().getMenuInflater().inflate(R.menu.item_menu, menu);
     }
+
 }
