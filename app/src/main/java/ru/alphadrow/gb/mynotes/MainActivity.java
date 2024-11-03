@@ -24,8 +24,7 @@ import ru.alphadrow.gb.mynotes.observe.Publisher;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    private Publisher publisher;
+    
     private Navigation navigation;
     boolean isLandScape;
 
@@ -120,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Fragment backStackFragment = getSupportFragmentManager().findFragmentById(R.id.notesContainer);
-        if (backStackFragment instanceof NotePropertiesFragment) {
-            getOnBackPressedDispatcher().onBackPressed();
-        }
+//        if (backStackFragment instanceof NotePropertiesFragment) {
+//            getOnBackPressedDispatcher().onBackPressed();
+//        }
     }
 }

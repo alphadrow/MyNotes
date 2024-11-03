@@ -29,7 +29,7 @@ public class NameEditFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        publisher = ((MainActivity) context).getPublisher();
+        publisher = MyApp.getPublisher();
     }
 
     @Nullable

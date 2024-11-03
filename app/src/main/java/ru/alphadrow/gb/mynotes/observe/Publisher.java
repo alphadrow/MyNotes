@@ -22,7 +22,9 @@ public class Publisher {
     }
 
     public void notifyTask(Note note){
-        observers.poll().updateState(note);
+        if (!observers.isEmpty()) {
+            observers.poll().updateState(note);
+        }
     }
 
 }

@@ -52,9 +52,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener, Fragmen
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity) context;
-        navigation = activity.getNavigation();
-        publisher = activity.getPublisher();
+        publisher = MyApp.getPublisher();
     }
 
     @Override
@@ -91,6 +89,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener, Fragmen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navigation = ((MainActivity) requireActivity()).getNavigation();
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
@@ -162,9 +161,14 @@ public class NoteFragment extends Fragment implements MyOnClickListener, Fragmen
         int position = noteAdapter.getMenuContextClickPosition();
         currentNote = noteSource.getNote(position);
         if (item.getItemId() == R.id.deleteItem) {
-            Bundle bundle = new Bundle();
-            bundle.putInt(Settings.KEY_POS, position);
-            DialogBeforeDeleteFragment dialogBeforeDeleteFragment = new DialogBeforeDeleteFragment(bundle);
+            publisher.subscribe(new Observer() {
+                @Override
+                public void updateState(Note note) {
+                    noteAdapter.removeItemById(position);
+                    noteSource.deleteNote(position);
+                }
+            });
+            DialogBeforeDeleteFragment dialogBeforeDeleteFragment = new DialogBeforeDeleteFragment();
             dialogBeforeDeleteFragment.show(requireActivity().getSupportFragmentManager(), "TAG");
 
         }
@@ -185,8 +189,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener, Fragmen
 
     @Override
     public void onDetach() {
-        navigation = null;
-        publisher = null;
         super.onDetach();
     }
 

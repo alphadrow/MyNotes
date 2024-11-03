@@ -226,7 +226,7 @@ public class NotePropertiesEditFragment extends Fragment implements MyOnClickLis
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        publisher = ((MainActivity) context).getPublisher();
+        publisher = MyApp.getPublisher();
     }
 
     @Override

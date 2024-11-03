@@ -53,8 +53,6 @@ public class NotePropertiesFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        navigation = null;
-        publisher = null;
         super.onDetach();
     }
 

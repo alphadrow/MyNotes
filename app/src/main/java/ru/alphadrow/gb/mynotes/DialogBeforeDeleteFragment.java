@@ -14,26 +14,24 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import java.util.Date;
+
+import ru.alphadrow.gb.mynotes.observe.Publisher;
+
 public class DialogBeforeDeleteFragment extends DialogFragment {
     int position;
-    NoteAdapter noteAdapter;
-    NotesSource noteSource;
+    Publisher publisher;
+
+
 
     public DialogBeforeDeleteFragment() {
 
     }
 
-    public DialogBeforeDeleteFragment(Bundle bundle) {
-        position = bundle.getInt(Settings.KEY_POS);
-        noteSource = MyDataBaseFirebaseImpl.getInstance();
-        noteAdapter = NoteAdapter.getInstance(this);
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        noteSource = MyDataBaseFirebaseImpl.getInstance();
-        noteAdapter = NoteAdapter.getInstance(this);
+        publisher = MyApp.getPublisher();
         View view = getLayoutInflater().inflate(R.layout.dialog_before_delete, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(R.string.delete_warning_message).setView(view).setNegativeButton(R.string.no, new android.content.DialogInterface.OnClickListener() {
@@ -43,9 +41,7 @@ public class DialogBeforeDeleteFragment extends DialogFragment {
         }).setPositiveButton(R.string.yes, new android.content.DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d("myLogs", "position: " + position);
-                noteSource.deleteNote(position);
-                noteAdapter.removeItemById(position);
+                publisher.notifyTask(new Note("", "", new Date(), Importance.FORGET_ABOUT_IT));
             }
         });
 

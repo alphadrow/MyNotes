@@ -39,9 +39,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         this.listener = listener;
     }
 
-    public static NoteAdapter getInstance(Fragment fragment) {
+    public static NoteAdapter getInstance(FragmentForContextMenuRegistrar registrar) {
         if (noteAdapter == null) {
-            noteAdapter = new NoteAdapter(fragment);
+            noteAdapter = new NoteAdapter(registrar);
         }
         return noteAdapter;
     }
