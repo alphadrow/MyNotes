@@ -26,12 +26,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size" />
-    <Button
-        android:id="@+id/editDate"
-        android:text="@string/edit_date"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+        <Button
+            android:id="@+id/editDate"
+            android:text="@string/edit_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+        <Button
+            android:id="@+id/applyButton"
+            android:text="@string/apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/forgetAboutItImportanceRB"
         android:layout_width="match_parent"
@@ -56,12 +70,7 @@
         android:id="@+id/lifeAndDeathImportanceRB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/applyButton"
-        android:text="@string/apply"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+
 
 </RadioGroup>
     </ScrollView>

@@ -22,7 +22,7 @@ public class NotePropertiesFragment extends Fragment {
     boolean isLandScape;
 
 
-    TextView textView;
+    TextView nameTextView;
     Button buttonEdit;
 
     TextView description;
@@ -46,9 +46,7 @@ public class NotePropertiesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity) context;
-        navigation = activity.getNavigation();
-        publisher = activity.getPublisher();
+
     }
 
     @Override
@@ -74,6 +72,9 @@ public class NotePropertiesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MainActivity activity = (MainActivity) requireActivity();
+        navigation = activity.getNavigation();
+        publisher = MyApp.getPublisher();
         isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (getArguments() != null) {
             this.currentNote = getArguments().getParcelable(ARG_NOTE);
@@ -94,14 +95,14 @@ public class NotePropertiesFragment extends Fragment {
                         .commit();
             }
         });
-        textView.setText(this.currentNote.getName());
+        nameTextView.setText(this.currentNote.getName());
         description.setText(this.currentNote.getDescription());
         dateOfCreate.setText(this.currentNote.getDateOfCreation().toString());
         importance.setText(this.currentNote.getImportance().toString());
     }
 
     private void initContent(@NonNull View view) {
-        textView = view.findViewById(R.id.nameTextView);
+        nameTextView = view.findViewById(R.id.nameTextView);
         buttonEdit = view.findViewById(R.id.editButton);
         description = view.findViewById(R.id.descriptionTextView);
         dateOfCreate = view.findViewById(R.id.timeAndDateTextView);
