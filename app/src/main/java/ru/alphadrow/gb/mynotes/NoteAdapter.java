@@ -7,16 +7,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> {
 
+    static NoteAdapter noteAdapter;
 
-    public  int sizeOfList() {
+
+    public int sizeOfList() {
         return notes.size();
     }
 
@@ -37,6 +39,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         this.listener = listener;
     }
 
+    public static NoteAdapter getInstance(FragmentForContextMenuRegistrar registrar) {
+        if (noteAdapter == null) {
+            noteAdapter = new NoteAdapter(registrar);
+        }
+        return noteAdapter;
+    }
 
     public NoteAdapter(FragmentForContextMenuRegistrar registrar) {
         this.registrar = registrar;
@@ -50,25 +58,26 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         return new MyViewHolder(view);
     }
 
-    public void removeItemById(int position){
+    public void removeItemById(int position) {
         notes.remove(position);
+        this.notifyItemRemoved(position);
     }
 
-    public void addNote(Note note){
+    public void addNote(Note note) {
         notes.add(note);
     }
 
 
-    public void updateNote(int position, Note note){
+    public void updateNote(int position, Note note) {
         notes.set(position, note);
+        this.notifyItemChanged(position);
     }
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.setName(notes.get(position).getName());
         holder.setDateOfCreation(notes.get(position).getDateOfCreation().toString());
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -79,7 +88,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         return menuContextClickPosition;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         public void setName(String name) {
             this.name.setText(name);
         }

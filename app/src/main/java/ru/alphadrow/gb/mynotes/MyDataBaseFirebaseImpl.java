@@ -15,32 +15,30 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyDataBaseFirebaseImpl implements NotesSource{
+public class MyDataBaseFirebaseImpl implements NotesSource {
     private static String NOTES_COLLECTION = "notes";
     private FirebaseFirestore store = FirebaseFirestore.getInstance();
-    private CollectionReference  collectionReference = store.collection(NOTES_COLLECTION);
-    private  List<Note> notes = new ArrayList<Note>();
+    private CollectionReference collectionReference = store.collection(NOTES_COLLECTION);
+    private List<Note> notes = new ArrayList<Note>();
+    static NotesSource notesSource;
 
 
     @Override
-    public List<Note> init(NotesSourceResponse notesSourceResponse) {
-        
-        collectionReference.orderBy(NoteTranslate.Fields.DATE_OF_CREATION, Query.Direction.DESCENDING).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            notes = new ArrayList<Note>();
-                            for (QueryDocumentSnapshot docFields : task.getResult()) {
-                                Note note = NoteTranslate.documentToNote(docFields.getId(),
-                                        docFields.getData());
-                                notes.add(note);
-                            }
-                            notesSourceResponse.initialazed(notes);
-                        }
+    public void init(NotesSourceResponse notesSourceResponse) {
+
+        collectionReference.orderBy(NoteTranslate.Fields.DATE_OF_CREATION, Query.Direction.DESCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    notes = new ArrayList<Note>();
+                    for (QueryDocumentSnapshot docFields : task.getResult()) {
+                        Note note = NoteTranslate.documentToNote(docFields.getId(), docFields.getData());
+                        notes.add(note);
                     }
-                });
-        return notes;
+                    notesSourceResponse.initialazed(notes);
+                }
+            }
+        });
     }
 
     @Override
@@ -50,8 +48,7 @@ public class MyDataBaseFirebaseImpl implements NotesSource{
 
     @Override
     public void updateNote(int position, Note note) {
-        collectionReference.document(notes.get(position).getId())
-                .update(NoteTranslate.noteToDocument(note));
+        collectionReference.document(notes.get(position).getId()).update(NoteTranslate.noteToDocument(note));
     }
 
     @Override
@@ -62,6 +59,14 @@ public class MyDataBaseFirebaseImpl implements NotesSource{
     @Override
     public int getNoteId(Note note) {
         return notes.indexOf(note);
+    }
+
+
+    public static NotesSource getInstance() {
+        if (notesSource == null) {
+            notesSource = new MyDataBaseFirebaseImpl();
+        }
+        return notesSource;
     }
 
 

@@ -1,5 +1,6 @@
 package ru.alphadrow.gb.mynotes;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import ru.alphadrow.gb.mynotes.observe.Observer;
 import ru.alphadrow.gb.mynotes.observe.Publisher;
 
 public class NotePropertiesFragment extends Fragment {
@@ -20,7 +23,6 @@ public class NotePropertiesFragment extends Fragment {
     public static String ARG_NOTE = "note";
     Note currentNote;
     boolean isLandScape;
-
 
     TextView nameTextView;
     Button buttonEdit;
@@ -51,10 +53,9 @@ public class NotePropertiesFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        navigation = null;
-        publisher = null;
         super.onDetach();
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,22 +85,92 @@ public class NotePropertiesFragment extends Fragment {
     }
 
     private void setContent() {
-        buttonEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.notesContainer, NotePropertiesFragmentEdit.newInstance(currentNote))
-                        .addToBackStack("")
-                        .commit();
-            }
-        });
         nameTextView.setText(this.currentNote.getName());
         description.setText(this.currentNote.getDescription());
         dateOfCreate.setText(this.currentNote.getDateOfCreation().toString());
         importance.setText(this.currentNote.getImportance().toString());
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateState(Note note) {
+                        currentNote = note;
+                    }
+
+
+                });
+                navigation.addFragment(NotePropertiesEditFragment.newInstance(currentNote), true, "notePropertiesEditFragment_onEditButton");
+
+            }
+        });
+
+        description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateState(Note note) {
+                        currentNote.setDescription(note.getDescription());
+                        description.setText(note.getDescription());
+                    }
+
+                });
+
+                DescriptionEditFragment descriptionEditFragment = new DescriptionEditFragment();
+                descriptionEditFragment.show(requireActivity().getSupportFragmentManager(), "TAG");
+            }
+        });
+        nameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateState(Note note) {
+                        currentNote.setName(note.getName());
+                        nameTextView.setText(note.getName());
+                    }
+
+                });
+
+                NameEditFragment nameEditFragment = new NameEditFragment();
+                nameEditFragment.show(requireActivity().getSupportFragmentManager(), "TAG");
+            }
+        });
+        importance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateState(Note note) {
+                        currentNote.setImportance(note.getImportance());
+                        importance.setText(note.getImportance().toString());
+                    }
+
+                });
+                ImportanceEditFragment importanceEditFragment = new ImportanceEditFragment();
+                importanceEditFragment.show(requireActivity().getSupportFragmentManager(), "TAG");
+            }
+        });
+        dateOfCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateState(Note note) {
+                        currentNote.setDateOfCreation(note.getDateOfCreation());
+                        dateOfCreate.setText(note.getDateOfCreation().toString());
+                    }
+
+                });
+                DateOfCreationEditFragment dateOfCreationEditFragment = new DateOfCreationEditFragment();
+                dateOfCreationEditFragment.show(requireActivity().getSupportFragmentManager(), "TAG");
+            }
+        });
     }
+
 
     private void initContent(@NonNull View view) {
         nameTextView = view.findViewById(R.id.nameTextView);
@@ -107,5 +178,11 @@ public class NotePropertiesFragment extends Fragment {
         description = view.findViewById(R.id.descriptionTextView);
         dateOfCreate = view.findViewById(R.id.timeAndDateTextView);
         importance = view.findViewById(R.id.importanceTextView);
+    }
+
+    @Override
+    public void onDestroy() {
+        publisher.notifyTask(currentNote);
+        super.onDestroy();
     }
 }

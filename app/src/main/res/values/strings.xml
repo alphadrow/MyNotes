@@ -27,12 +27,12 @@
     <string name="start_level">Level 1</string>
     <string name="next_level">Next Level</string>
     <string name="level_text">Level %1$d</string>
-<!-- -
-    This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
-    For more information, see https://support.google.com/admob/answer/3052638
-<!- -->
+    <!-- -
+        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
+        For more information, see https://support.google.com/admob/answer/3052638
+    <!- -->
     <string name="interstitial_ad_unit_id">YOUR_INTERSTITIAL_AD_UNIT_ID</string>
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="about_note">Приложение для ведения заметок. Никакие права не защищены :)</string>
     <string name="importanceRGName">Importance</string>
     <string name="apply">APPLY</string>
@@ -55,4 +55,13 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="default_web_client_id">mynotes-433908</string>
+    <string name="delete_warning_message">Are you sure?</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name="click_to_edit">Click to params for edit</string>
+    <string name="forget_about_it">Forget about it</string>
+    <string name="low">low</string>
+    <string name="medium">medium</string>
+    <string name="high">high</string>
+    <string name="life_and_death">life and death</string>
 </resources>

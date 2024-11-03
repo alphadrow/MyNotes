@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/importance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/forgetAboutItImportance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/forget_about_it" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/lowImportance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/low" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/mediumImportance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/medium" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/highImportance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/high" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/lifeAndDeathImportance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/life_and_death" />
+    </RadioGroup>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_change_importance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/apply" />
+</LinearLayout>

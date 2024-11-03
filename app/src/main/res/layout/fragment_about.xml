@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="@dimen/text_size"
-        android:text="@string/about_note" />
+        android:text="@string/about_note"
+        android:textSize="@dimen/text_size" />
 
 </FrameLayout>

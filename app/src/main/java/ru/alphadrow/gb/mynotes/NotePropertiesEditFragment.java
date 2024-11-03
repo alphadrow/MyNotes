@@ -22,7 +22,7 @@ import java.util.Date;
 
 import ru.alphadrow.gb.mynotes.observe.Publisher;
 
-public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickListener {
+public class NotePropertiesEditFragment extends Fragment implements MyOnClickListener {
 
     private Publisher publisher;
 
@@ -42,14 +42,14 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     EditText description;
     public static String ARG_NOTE = "note";
 
-    public static NotePropertiesFragmentEdit newInstance() {
-        NotePropertiesFragmentEdit fragment = new NotePropertiesFragmentEdit();
+    public static NotePropertiesEditFragment newInstance() {
+        NotePropertiesEditFragment fragment = new NotePropertiesEditFragment();
         return fragment;
     }
 
 
-    public static NotePropertiesFragmentEdit newInstance(Note note) {
-        NotePropertiesFragmentEdit fragment = new NotePropertiesFragmentEdit();
+    public static NotePropertiesEditFragment newInstance(Note note) {
+        NotePropertiesEditFragment fragment = new NotePropertiesEditFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_NOTE, note);
         fragment.setArguments(bundle);
@@ -63,10 +63,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         if (getArguments() != null) {
             this.currentNote = getArguments().getParcelable(ARG_NOTE);
         } else {
-            this.currentNote = new Note(""
-                    , ""
-                    , new Date()
-                    , Importance.FORGET_ABOUT_IT);
+            this.currentNote = new Note("", "", new Date(), Importance.FORGET_ABOUT_IT);
         }
     }
 
@@ -80,7 +77,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        publisher = MyApp.getPublisher();
+        // publisher = MyApp.getPublisher(); //TODO сделать получение через MyApp
         initContent(view);
         setContent();
     }
@@ -129,39 +126,39 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = notesSource.getNoteId(currentNote);
                 currentNote = collectNote();
-                publisher.notifyTask(currentNote);
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
 
             }
+
         });
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == forgetAboutItImportanceRB.getId()) {
-                    importance = (Importance.FORGET_ABOUT_IT);
+
+                if (checkedId == R.id.lifeAndDeathImportance) {
+                    importance = Importance.LIFE_AND_DEATH;
                 }
-                if (checkedId == lowImportanceRB.getId()) {
-                    importance = (Importance.LOW);
+                if (checkedId == R.id.lowImportance) {
+                    importance = Importance.LOW;
                 }
-                if (checkedId == mediumImportanceRB.getId()) {
-                    importance = (Importance.MEDIUM);
+                if (checkedId == R.id.mediumImportance) {
+                    importance = Importance.MEDIUM;
                 }
-                if (checkedId == highImportanceRB.getId()) {
-                    importance = (Importance.HIGH);
+                if (checkedId == R.id.highImportance) {
+                    importance = Importance.HIGH;
                 }
-                if (checkedId == lifeAndDeathImportanceRB.getId()) {
-                    importance = (Importance.LIFE_AND_DEATH);
+                if (checkedId == R.id.forgetAboutItImportance) {
+                    importance = Importance.FORGET_ABOUT_IT;
                 }
+                currentNote.setImportance(importance);
             }
         });
     }
 
     private int getRealRBID(Importance importance) {
         switch (importance) {
-            case FORGET_ABOUT_IT:
-                return R.id.forgetAboutItImportanceRB;
             case LOW:
                 return R.id.lowImportanceRB;
             case MEDIUM:
@@ -173,6 +170,21 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
             default:
                 return R.id.forgetAboutItImportanceRB;
         }
+    }
+
+    private Importance getImportanceById(int id) {
+        if (id == R.id.lowImportanceRB) {
+            return Importance.LOW;
+        }
+        if (id == R.id.mediumImportanceRB) {
+            return Importance.MEDIUM;
+        }
+        if (id == R.id.highImportanceRB) {
+            return Importance.HIGH;
+        }
+        if (id == R.id.lifeAndDeathImportanceRB) {
+            return Importance.LIFE_AND_DEATH;
+        } else return Importance.FORGET_ABOUT_IT;
     }
 
     private void initContent(@NonNull View view) {
@@ -192,28 +204,29 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
     private Note collectNote() {
         String name = this.name.getText().toString();
         String description = this.description.getText().toString();
-        Importance importance = this.importance;
+        importance = getImportanceById(radioGroup.getCheckedRadioButtonId());
         if (currentNote != null) {
             currentNote.setName(name);
             currentNote.setDescription(description);
             currentNote.setImportance(importance);
         }
+
         return currentNote;
     }
+
     @Override
     public void onMyClick(View view, int position) {
-
+//TODO WTF?!
     }
 
     protected void showDatePicker() {
         setDate(getView());
-
     }
-
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        publisher = MyApp.getPublisher();
     }
 
     @Override
@@ -224,6 +237,7 @@ public class NotePropertiesFragmentEdit extends Fragment implements MyOnClickLis
 
     @Override
     public void onDestroy() {
+        publisher.notifyTask(currentNote);
         super.onDestroy();
     }
 }
