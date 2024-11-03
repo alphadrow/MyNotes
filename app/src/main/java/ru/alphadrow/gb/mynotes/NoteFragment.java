@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +25,7 @@ import java.util.List;
 import ru.alphadrow.gb.mynotes.observe.Observer;
 import ru.alphadrow.gb.mynotes.observe.Publisher;
 
-public class NoteFragment extends Fragment implements MyOnClickListener {
+public class NoteFragment extends Fragment implements MyOnClickListener, FragmentForContextMenuRegistrar {
     public static String ARG_NOTE = "note";
 
     Note currentNote;
@@ -65,8 +64,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(Settings.KEY_NOTE);
         }
-
-
     }
 
     @Override
@@ -103,7 +100,7 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigation.addFragment(NotePropertiesEditFragment.newInstance(), true, "notePropertiesEditFragment_float");
+                navigation.addFragment(NotePropertiesEditFragment.newInstance(), true, "notePropertiesEditFragment_float"); //TODO исправить название метода
                 publisher.subscribe(new Observer() {
                     @Override
                     public void updateState(Note note) {
@@ -147,13 +144,10 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         if (item.getItemId() == R.id.editItem) {
             publisher.subscribe(new Observer() {
 
-
-
                 @Override
                 public void updateState(Note note) {
                     noteAdapter.updateNote(position, note);
                     noteSource.updateNote(position, note);
-
                 }
 
             });
@@ -162,7 +156,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         return super.onOptionsItemSelected(item);
 
     }
-
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
@@ -177,7 +170,6 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         }
         if (item.getItemId() == R.id.editItem) {
             publisher.subscribe(new Observer() {
-
 
                 @Override
                 public void updateState(Note note) {
@@ -214,4 +206,8 @@ public class NoteFragment extends Fragment implements MyOnClickListener {
         requireActivity().getMenuInflater().inflate(R.menu.item_menu, menu);
     }
 
+    @Override
+    public void register(View view) {
+        registerForContextMenu(view);
+    }
 }

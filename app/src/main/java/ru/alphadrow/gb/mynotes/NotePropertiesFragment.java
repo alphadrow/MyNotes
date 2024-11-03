@@ -48,9 +48,7 @@ public class NotePropertiesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity) context;
-        navigation = activity.getNavigation();
-        publisher = activity.getPublisher();
+
     }
 
     @Override
@@ -77,6 +75,9 @@ public class NotePropertiesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        MainActivity activity = (MainActivity) requireActivity();
+        navigation = activity.getNavigation();
+        publisher = MyApp.getPublisher();
         isLandScape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         if (getArguments() != null) {
             this.currentNote = getArguments().getParcelable(ARG_NOTE);

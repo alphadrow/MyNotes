@@ -34,9 +34,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
 
     private int menuContextClickPosition;
 
-    private Fragment fragment;
-
-    public void setOnMyOnClickListener(MyOnClickListener listener) {
+    private FragmentForContextMenuRegistrar registrar;
+    public void setOnMyOnClickListener(MyOnClickListener listener){
         this.listener = listener;
     }
 
@@ -47,8 +46,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         return noteAdapter;
     }
 
-    private NoteAdapter(Fragment fragment) {
-        this.fragment = fragment;
+    public NoteAdapter(FragmentForContextMenuRegistrar registrar) {
+        this.registrar = registrar;
     }
 
 
@@ -80,7 +79,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
         holder.setDateOfCreation(notes.get(position).getDateOfCreation().toString());
     }
 
-
     @Override
     public int getItemCount() {
         return notes.size();
@@ -108,7 +106,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
             cardView = itemView.findViewById(R.id.noteCardView);
             name = itemView.findViewById(R.id.noteNameTextView);
             dateOfCreation = itemView.findViewById(R.id.noteCreateAtTextView);
-            fragment.registerForContextMenu(cardView);
+            registrar.register(cardView);
             cardView.setOnLongClickListener(new View.OnLongClickListener() {
 
                 @Override
@@ -121,7 +119,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder> 
                 @Override
                 public void onClick(View v) {
                     listener.onMyClick(v, getAdapterPosition());
-
                 }
             });
         }

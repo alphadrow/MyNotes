@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +77,7 @@ public class NotePropertiesEditFragment extends Fragment implements MyOnClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // publisher = MyApp.getPublisher(); //TODO сделать получение через MyApp
         initContent(view);
         setContent();
     }
@@ -87,7 +87,10 @@ public class NotePropertiesEditFragment extends Fragment implements MyOnClickLis
     DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-            currentNote.setDateOfCreation(new Date(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth()));
+            currentNote.setDateOfCreation(new Date(
+                    datePicker.getYear(),
+                    datePicker.getMonth(),
+                    datePicker.getDayOfMonth()));
         }
     };
 
@@ -95,7 +98,13 @@ public class NotePropertiesEditFragment extends Fragment implements MyOnClickLis
     public void setDate(View v) {
         Calendar date = Calendar.getInstance();
 
-        new DatePickerDialog(requireContext(), onDateSetListener, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(requireContext(),
+                onDateSetListener,
+                date.get(Calendar.YEAR),
+                date.get(Calendar.MONTH),
+                date.get(Calendar.DAY_OF_MONTH)
+        )
+                .show();
     }
 
 
@@ -121,11 +130,13 @@ public class NotePropertiesEditFragment extends Fragment implements MyOnClickLis
                 requireActivity().getOnBackPressedDispatcher().onBackPressed();
 
             }
+
         });
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                 if (checkedId == R.id.lifeAndDeathImportance) {
                     importance = Importance.LIFE_AND_DEATH;
                 }
@@ -199,19 +210,18 @@ public class NotePropertiesEditFragment extends Fragment implements MyOnClickLis
             currentNote.setDescription(description);
             currentNote.setImportance(importance);
         }
+
         return currentNote;
     }
 
     @Override
     public void onMyClick(View view, int position) {
-
+//TODO WTF?!
     }
 
     protected void showDatePicker() {
         setDate(getView());
-
     }
-
 
     @Override
     public void onAttach(@NonNull Context context) {
